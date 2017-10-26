@@ -1,0 +1,61 @@
+'''
+Functions for converting open ephys data to mountainsort's mda format
+
+'''
+
+import matplotlib.pylab as plt
+import numpy as np
+import OpenEphys
+
+
+def delete_noise(file_path, name, waveforms, timestamps):
+    to_delete = np.array([])
+    for wave in range(0, waveforms.shape[0]):
+        if np.ndarray.max(abs(waveforms[wave, :, :])) > 0.0025:
+            to_delete = np.append(to_delete, wave)
+
+    # print('these are deleted')
+    # print(to_delete)
+    # print(waveforms[to_delete[0], :, 0])
+
+    for spk in range(0, to_delete.shape[0]):
+        plt.plot(waveforms[to_delete[spk], :, 0])
+
+    plt.savefig(file_path + name + '_deleted_waves.png')
+
+    waveforms = np.delete(waveforms, to_delete, axis=0)
+    timestamps = np.delete(timestamps, to_delete)
+
+    return waveforms, timestamps
+
+
+def get_data_spike(folder_path, file_path, name):
+    data = OpenEphys.load(file_path) # returns a dict with data, timestamps, etc.
+    timestamps = data['timestamps']
+    waveforms = data['spikes']
+
+    print('{} waveforms were found in the spike file'.format(waveforms.shape[0]))
+
+    waveforms, timestamps = delete_noise(folder_path, name, waveforms, timestamps)
+
+    return waveforms, timestamps
+
+
+def get_data_continuous(prm, file_path):
+    data = OpenEphys.load(file_path)
+    signal = data['data']
+    signal = np.asanyarray(signal)
+    return signal
+
+
+def convert_spk_to_mda(prm):
+    folder_path = prm.get_filepath()
+    number_of_tetrodes = prm.get_num_tetrodes()
+    sampling_rate = prm.get_sampling_rate()
+    samples_per_spike = prm.get_waveform_size()
+
+    for tetrode in range(number_of_tetrodes):
+        file_path = folder_path + 'TT' + str(tetrode) + '.spikes'
+        waveforms, timestamps = get_data_spike(folder_path, file_path, 'TT' + str(tetrode))
+
+
