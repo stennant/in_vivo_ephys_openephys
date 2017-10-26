@@ -48,6 +48,19 @@ def get_data_continuous(prm, file_path):
     return signal
 
 
+def get_padded_array(waveforms, samples_per_spike):
+    number_of_events = waveforms.shape[0]
+    padded_array = np.zeros((number_of_events, samples_per_spike*2, 4))
+    to_insert = np.zeros((samples_per_spike, number_of_events))
+
+    for channel in range(4):
+        padded_channel = np.insert(waveforms[:, :, channel], 0, to_insert, axis=1)
+        padded_array[:, :, channel] = padded_channel
+    padded_array = padded_array.T
+
+    return padded_array
+
+
 def convert_spk_to_mda(prm):
     folder_path = prm.get_filepath()
     number_of_tetrodes = prm.get_num_tetrodes()
@@ -57,5 +70,6 @@ def convert_spk_to_mda(prm):
     for tetrode in range(number_of_tetrodes):
         file_path = folder_path + 'TT' + str(tetrode) + '.spikes'
         waveforms, timestamps = get_data_spike(folder_path, file_path, 'TT' + str(tetrode))
+        padded_array = get_padded_array(waveforms, samples_per_spike)
 
 
