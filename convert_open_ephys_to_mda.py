@@ -4,6 +4,7 @@ Functions for converting open ephys data to mountainsort's mda format
 '''
 
 import matplotlib.pylab as plt
+import mdaio
 import numpy as np
 import OpenEphys
 
@@ -56,8 +57,22 @@ def get_padded_array(waveforms, samples_per_spike):
     for channel in range(4):
         padded_channel = np.insert(waveforms[:, :, channel], 0, to_insert, axis=1)
         padded_array[channel, :, :] = padded_channel
-
     return padded_array
+
+
+def get_peak_indices(waveforms, samples_per_spike):
+    number_of_events = waveforms.shape[0]
+    waveforms2d = np.zeros((number_of_events, 4*samples_per_spike))
+
+    for event in range(number_of_events):
+        waveforms2d[event, :] = waveforms[event, :, :].flatten()
+
+    peak_indices_all_ch = np.argmax(waveforms2d, 1)
+    peak_indices = np.floor(peak_indices_all_ch/4)
+
+    return peak_indices
+
+
 
 
 def convert_spk_to_mda(prm):
@@ -70,5 +85,9 @@ def convert_spk_to_mda(prm):
         file_path = folder_path + 'TT' + str(tetrode) + '.spikes'
         waveforms, timestamps = get_data_spike(folder_path, file_path, 'TT' + str(tetrode))
         padded_array = get_padded_array(waveforms, samples_per_spike)
+        print('I am writing the mda files now.')
+        mdaio.writemda32(padded_array, folder_path + 'tetrode_' + str(tetrode) + '.mda')
+        peak_indices = get_peak_indices(waveforms, samples_per_spike)
+
 
 
