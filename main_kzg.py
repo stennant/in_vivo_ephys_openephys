@@ -38,7 +38,7 @@ def process_a_dir(dir_name):
     print('All folders in {} will be processed.'.format(dir_name))
     prm.set_filepath(dir_name)
     convert_open_ephys_to_mda.convert_spk_to_mda(prm)
-    # convert to mountainsort format and save spikes
+
     # read and process location info
     # read opto light
 
