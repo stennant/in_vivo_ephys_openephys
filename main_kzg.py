@@ -2,6 +2,8 @@ import convert_open_ephys_to_mda
 import glob
 import os
 import parameters
+import process_movement
+import process_optogenetics
 
 
 prm = parameters.Parameters()
@@ -38,6 +40,8 @@ def process_a_dir(dir_name):
     print('All folders in {} will be processed.'.format(dir_name))
     prm.set_filepath(dir_name)
     convert_open_ephys_to_mda.convert_spk_to_mda(prm)
+    process_movement.save_or_open_movement_arrays(prm)
+
 
     # read and process location info
     # read opto light
