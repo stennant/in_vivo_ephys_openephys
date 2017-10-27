@@ -73,8 +73,6 @@ def get_peak_indices(waveforms, samples_per_spike):
     return peak_indices
 
 
-
-
 def convert_spk_to_mda(prm):
     folder_path = prm.get_filepath()
     number_of_tetrodes = prm.get_num_tetrodes()
@@ -86,8 +84,10 @@ def convert_spk_to_mda(prm):
         waveforms, timestamps = get_data_spike(folder_path, file_path, 'TT' + str(tetrode))
         padded_array = get_padded_array(waveforms, samples_per_spike)
         print('I am writing the mda files now.')
-        mdaio.writemda32(padded_array, folder_path + 'tetrode_' + str(tetrode) + '.mda')
+
+        mdaio.writemda32(padded_array, folder_path + 'raw.nt' + str(tetrode) + '.mda')
         peak_indices = get_peak_indices(waveforms, samples_per_spike)
+        mdaio.writemda32(peak_indices, folder_path + 'event_times.nt' + str(tetrode) + '.mda')
 
 
 
