@@ -50,13 +50,12 @@ def get_data_continuous(prm, file_path):
 
 def get_padded_array(waveforms, samples_per_spike):
     number_of_events = waveforms.shape[0]
-    padded_array = np.zeros((number_of_events, samples_per_spike*2, 4))
+    padded_array = np.zeros((4, number_of_events, samples_per_spike*2))
     to_insert = np.zeros((samples_per_spike, number_of_events))
 
     for channel in range(4):
         padded_channel = np.insert(waveforms[:, :, channel], 0, to_insert, axis=1)
-        padded_array[:, :, channel] = padded_channel
-    padded_array = padded_array.T
+        padded_array[channel, :, :] = padded_channel
 
     return padded_array
 
