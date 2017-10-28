@@ -31,7 +31,8 @@ class Parameters:
     STOP_THRESHOLD = 0
     outbound = 0
     reward_zone = 0
-    movement_ch = 0
+    movement_ch = '100_ADC2.continuous'
+    opto_ch = '100_ADC3.continuous'
     spike_threshold = 120  # uV
     waveform_size = 40
     recording_size = 0
@@ -163,6 +164,12 @@ class Parameters:
 
     def set_movement_ch(self, movement_ch):
         Parameters.movement_ch = movement_ch
+
+    def get_opto_ch(self):
+        return self.opto_ch
+
+    def set_opto_ch(self, opto_ch):
+        Parameters.opto_ch = opto_ch
 
 
     def get_spike_detection_threshold(self):

@@ -1,8 +1,18 @@
 from __future__ import division
 import file_utility
+import matplotlib.pylab as plt
 import numpy as np
 import os
 import open_ephys_IO
+
+
+# This is necessary because of artefacts at the beginning and end of the recordings. 5 seconds are removed
+def remove_beginning_and_end(prm, raw_location_data):
+    sampling_rate = prm.get_sampling_rate()
+    raw_location_trimmed = raw_location_data[sampling_rate*5:-sampling_rate*5]
+    return raw_location_trimmed
+
+
 
 '''
 These functions calculate the location normalized to metric, the velocity, and the speed of the animal.
@@ -13,8 +23,9 @@ it will read the data from the file instead of calculating again.
 
 
 def get_raw_location(prm):
-    file_path = prm.get_filepath() + '100_ADC2.continuous'
+    file_path = prm.get_filepath() + prm.get_movement_ch()
     location = open_ephys_IO.get_data_continuous(prm, file_path)
+    location = remove_beginning_and_end(prm, location)
     return location
 
 
@@ -57,6 +68,7 @@ def get_normalised_location_metric(prm, raw_data):
     # (i.e., 'normalise' - it's more of a standardisation though) and convert to metric system (cm)
     normalised_location_metric = (recorded_location - recorded_startpoint) / distance_unit
     np.save(prm.get_filepath() + "Behaviour\\Data\\location", normalised_location_metric)
+
     print('Normalized location is saved.')
 
     return normalised_location_metric
@@ -232,6 +244,8 @@ def cached_calculate_movement(prm):
     data_path = prm.get_behaviour_data_path()
     if os.path.isfile(data_path + "\\location.npy") is False:
         location_raw = get_raw_location(prm)
+        plt.plot(location_raw)
+        plt.show()
         location = get_normalised_location_metric(prm, location_raw)
         np.save(data_path + "\\location", location)
     else:

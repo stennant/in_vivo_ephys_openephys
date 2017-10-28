@@ -20,8 +20,9 @@ Initializes parameters
     movement_ch : channel number for movement information
 '''
 
+
 def init_params():
-    prm.set_filepath('C:\\Users\\s1466507\\Documents\\Ephys\\test_VR_opto\\')
+    prm.set_filepath('C:\\Users\\s1466507\\Documents\\Ephys\\test_VR_opto\\test\\')
 
     # f prm.set_filename('TT3.spikes')
     prm.set_file(prm.get_filepath(), prm.get_filename())
@@ -30,17 +31,22 @@ def init_params():
     # - 30 cm black box;60 cm outbound journey;20 cm reward zone;60 cm outbound journey;30 cm black box
     prm.set_stop_threshold(0.7/5)  # speed is given in cm/200ms 0.7*1/2000
     prm.set_num_channels(16)
-    prm.set_movement_ch(20) # this won't work anymore
+    prm.set_movement_ch('100_ADC2.continuous')
+    prm.set_opto_ch('100_ADC3.continuous')
     prm.set_waveform_size(40)  # number of sampling points to take when taking waveform for spikes (1ms)
 
     prm.set_sampling_rate(30000)
+    prm.set_track_length(200)
+    prm.set_beginning_of_outbound(30)
+    prm.set_reward_zone(90)
 
 
 def process_a_dir(dir_name):
     print('All folders in {} will be processed.'.format(dir_name))
     prm.set_filepath(dir_name)
     convert_open_ephys_to_mda.convert_spk_to_mda(prm)
-    process_movement.save_or_open_movement_arrays(prm)
+    process_movement.save_or_open_movement_arrays(prm) #todo debug this with a good file!!!
+    process_optogenetics.save_or_open_light(prm)
 
 
     # read and process location info
