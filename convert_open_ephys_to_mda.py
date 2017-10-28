@@ -39,7 +39,7 @@ def convert_spk_to_mda(prm):
     for tetrode in range(number_of_tetrodes):
         file_path = folder_path + 'TT' + str(tetrode) + '.spikes'
         waveforms, timestamps = open_ephys_IO.get_data_spike(folder_path, file_path, 'TT' + str(tetrode))
-        np.save(folder_path + 'TT' + str(tetrode) + '_timestamps', timestamps)
+        np.save(folder_path + 'TT' + str(tetrode) + '_timestamps', timestamps) # todo: this is shifted by 10 seconds relative to light and location!
 
         padded_array = get_padded_array(waveforms, samples_per_spike)
 
