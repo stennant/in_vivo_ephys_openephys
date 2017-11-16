@@ -2,7 +2,7 @@
 Tests for the functions in movement.py
 '''
 
-import process_movement
+import vr_process_movement
 import numpy as np
 import parameters
 
@@ -18,7 +18,7 @@ def test_get_instant_velocity():
     sampling_points_per200ms = 2
 
     desired_result = [0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
-    result = process_movement.get_instant_velocity(prm, location, sampling_points_per200ms)
+    result = vr_process_movement.get_instant_velocity(prm, location, sampling_points_per200ms)
 
     assert np.allclose(result, desired_result, rtol=1e-05, atol=1e-08)
 
@@ -28,5 +28,5 @@ def test_get_avg_speed_200ms():
     sampling_points_per200ms = 2
 
     desired_result = [0., 0., 1., 1., 1., 1.]
-    result = process_movement.get_avg_speed_200ms(prm, velocity, sampling_points_per200ms)
+    result = vr_process_movement.get_avg_speed_200ms(prm, velocity, sampling_points_per200ms)
     assert np.allclose(result, desired_result, rtol=1e-05, atol=1e-08)

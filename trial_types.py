@@ -9,7 +9,7 @@ data is loaded from the file (the location of this file is specified in init_par
 import numpy as np
 import os
 import matplotlib.pylab as plt
-import process_movement
+import vr_process_movement
 import file_reader
 import parameters
 import signal_for_indices
@@ -188,6 +188,6 @@ def save_or_open_trial_arrays(prm, filepath, channel):
             print('---FILE ERROR: The size of '+file+' is 0, something is wrong.---')
 
     beaconed_trials, beaconed_signal, nbeaconed_trials, nbeaconed_signal, probe_trials, probe_signal \
-        = cached_trial_type(prm, channel, filepath, process_movement.get_normalised_location_metric(fr.get_raw_data))
+        = cached_trial_type(prm, channel, filepath, vr_process_movement.get_normalised_location_metric(fr.get_raw_data))
 
     return beaconed_trials, nbeaconed_trials, probe_trials, beaconed_signal, nbeaconed_signal, probe_signal

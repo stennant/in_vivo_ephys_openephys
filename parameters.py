@@ -50,13 +50,13 @@ class Parameters:
         return Parameters.is_vr
 
     def set_is_vr(self, is_vr):
-            Parameters.filepath = is_vr
+        Parameters.is_vr = is_vr
 
     def get_is_open_field(self):
         return Parameters.is_open_field
 
     def set_is_open_field(self, is_open_field):
-        Parameters.filepath = is_open_field
+        Parameters.is_open_field = is_open_field
 
     def get_filepath(self):
         return Parameters.filepath

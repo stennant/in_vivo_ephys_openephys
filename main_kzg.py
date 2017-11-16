@@ -2,11 +2,12 @@ import convert_open_ephys_to_mda
 import glob
 import os
 import parameters
-import process_movement
+import vr_process_movement
 import process_optogenetics
 
 
 prm = parameters.Parameters()
+
 
 def init_vr_params():
     # - 30 cm black box;60 cm outbound journey;20 cm reward zone;60 cm outbound journey;30 cm black box
@@ -16,7 +17,6 @@ def init_vr_params():
     prm.set_opto_ch('100_ADC3.continuous')
     prm.set_waveform_size(40)  # number of sampling points to take when taking waveform for spikes (1ms)
 
-    prm.set_sampling_rate(30000)
     prm.set_track_length(200)
     prm.set_beginning_of_outbound(30)
     prm.set_reward_zone(90)
@@ -39,7 +39,8 @@ Initializes parameters
 
 
 def init_params():
-    prm.set_filepath('C:\\Users\\s1466507\\Documents\\Ephys\\test_VR_opto\\test\\')
+    prm.set_filepath('D:\\open_field_test\\')
+    prm.set_sampling_rate(30000)
 
     # f prm.set_filename('TT3.spikes')
     prm.set_file(prm.get_filepath(), prm.get_filename())
@@ -54,15 +55,14 @@ def init_params():
         init_open_field_params()
 
 
-
-
-
 def process_a_dir(dir_name):
     print('All folders in {} will be processed.'.format(dir_name))
     prm.set_filepath(dir_name)
     convert_open_ephys_to_mda.convert_spk_to_mda(prm)
 
-    process_movement.save_or_open_movement_arrays(prm)
+    if prm.is_vr is True:
+        vr_process_movement.save_or_open_movement_arrays(prm)
+
     process_optogenetics.save_or_open_light(prm)
 
 
