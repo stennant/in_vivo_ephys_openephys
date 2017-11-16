@@ -8,6 +8,10 @@ prm.get_filepath()
 
 
 class Parameters:
+
+    is_vr = False
+    is_open_field = False
+
     filepath = ''
     filename = ''
     file = ''
@@ -41,6 +45,18 @@ class Parameters:
 
     def __init__(self):
         return
+
+    def get_is_vr(self):
+        return Parameters.is_vr
+
+    def set_is_vr(self, is_vr):
+            Parameters.filepath = is_vr
+
+    def get_is_open_field(self):
+        return Parameters.is_open_field
+
+    def set_is_open_field(self, is_open_field):
+        Parameters.filepath = is_open_field
 
     def get_filepath(self):
         return Parameters.filepath
