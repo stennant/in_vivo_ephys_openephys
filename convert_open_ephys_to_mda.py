@@ -3,20 +3,40 @@ Functions for converting open ephys data to mountainsort's mda format
 
 '''
 
+import matplotlib.pylab as plt
 import mdaio
 import numpy as np
 import open_ephys_IO
 
 
+def pad_event(waveforms, channel, samples_per_spike, event):
+    padded_event = np.hstack((waveforms[event, :, channel], np.zeros(samples_per_spike)))
+    return padded_event
+
+
 def get_padded_array(waveforms, samples_per_spike):
     number_of_events = waveforms.shape[0]
-    padded_array = np.zeros((4, number_of_events, samples_per_spike*2))
-    to_insert = np.zeros((samples_per_spike, number_of_events))
+    all_padded = np.zeros((4, samples_per_spike*2*number_of_events))
 
     for channel in range(4):
-        padded_channel = np.insert(waveforms[:, :, channel], 0, to_insert, axis=1)
-        padded_array[channel, :, :] = padded_channel
-    return padded_array
+        padded_events_ch = np.zeros((number_of_events, samples_per_spike*2))
+        for event in range(number_of_events):
+            padded_event = pad_event(waveforms, channel, samples_per_spike, event)
+            padded_events_ch[event, :] = padded_event
+        padded_events_ch = padded_events_ch.flatten('C')
+        all_padded[channel, :] = padded_events_ch
+
+    too_big_indices = np.where(all_padded > 30000)
+    too_small_indices = np.where(all_padded < -30000)
+
+    all_padded[too_big_indices] = 30000
+    all_padded[too_small_indices] = -30000
+
+    all_padded = all_padded * (-1)*10000000
+
+    all_padded = np.asarray(all_padded, dtype='int16')
+
+    return all_padded
 
 
 def get_peak_indices(waveforms, samples_per_spike):
@@ -27,8 +47,11 @@ def get_peak_indices(waveforms, samples_per_spike):
         waveforms2d[event, :] = waveforms[event, :, :].flatten()
 
     peak_indices_all_ch = np.argmax(waveforms2d, 1)
-    peak_indices = np.floor(peak_indices_all_ch/4)
-    return peak_indices
+    peak_indices_in_wave = np.floor(peak_indices_all_ch/4)
+    peak_indices_in_wave = np.asarray(peak_indices_in_wave, dtype='int16')
+    peak_indices_all_events = peak_indices_in_wave + np.arange(0, number_of_events)*40
+    peak_indices = np.array(peak_indices_all_events, dtype='int32')
+    return peak_indices # add event number to this, it needs the absolute index not 0-40
 
 
 def convert_spk_to_mda(prm):
@@ -39,13 +62,15 @@ def convert_spk_to_mda(prm):
     for tetrode in range(number_of_tetrodes):
         file_path = folder_path + 'TT' + str(tetrode) + '.spikes'
         waveforms, timestamps = open_ephys_IO.get_data_spike(folder_path, file_path, 'TT' + str(tetrode))
-        np.save(folder_path + 'TT' + str(tetrode) + '_timestamps', timestamps) # todo: this is shifted by 10 seconds relative to light and location!
+        np.save(folder_path + 'TT' + str(tetrode) + '_timestamps', timestamps)  # todo: this is shifted by 10 seconds relative to light and location!
 
         padded_array = get_padded_array(waveforms, samples_per_spike)
 
-        mdaio.writemda32(padded_array, folder_path + 'raw.nt' + str(tetrode) + '.mda')
+        mdaio.writemda16i(padded_array, folder_path + 'raw.nt' + str(tetrode) + '.mda')
         peak_indices = get_peak_indices(waveforms, samples_per_spike)
-        mdaio.writemda32(peak_indices, folder_path + 'event_times.nt' + str(tetrode) + '.mda')
+        mdaio.writemda32i(peak_indices, folder_path + 'event_times.nt' + str(tetrode) + '.mda')
+        
+        mdaio.writemda32(timestamps, folder_path + 'timestamps.nt' + str(tetrode) + '.mda')
 
 
 

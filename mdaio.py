@@ -235,7 +235,8 @@ def readmda(path):
         return None
 
 def writemda32(X,fname):
-    return _writemda(X,fname,'float32')
+    num_bytes_per_entry = 4
+    return _writemda(X,fname,'float32', num_bytes_per_entry)
 
 def writemda64(X,fname):
     return _writemda(X,fname,'float64')
@@ -244,20 +245,23 @@ def writemda8(X,fname):
     return _writemda(X,fname,'uint8')
 
 def writemda32i(X,fname):
-    return _writemda(X,fname,'int32')
+    num_bytes_per_entry = 4
+    return _writemda(X,fname,'int32', num_bytes_per_entry)
 
 def writemda32ui(X,fname):
     return _writemda(X,fname,'uint32')
 
 def writemda16i(X,fname):
-    return _writemda(X,fname,'int16')
+    num_bytes_per_entry = 2
+    return _writemda(X,fname,'int16', num_bytes_per_entry)
 
 def writemda16ui(X,fname):
-    return _writemda(X,fname,'uint16')
+    num_bytes_per_entry = 2
+    return _writemda(X,fname,'uint16', num_bytes_per_entry)
 
-def _writemda(X,fname,dt):
+def _writemda(X,fname,dt, num_bytes_per_entry):
     dt_code=0
-    num_bytes_per_entry=0
+    #num_bytes_per_entry=2 # changed 0 to 2 here
     dt_code=_dt_code_from_dt(dt)
     if dt_code is None:
         print("Unexpected data type: {}".format(dt))
