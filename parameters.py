@@ -42,6 +42,8 @@ class Parameters:
     recording_size = 0
     tetrode = 0
 
+    opto_tagging_done = False
+
 
     def __init__(self):
         return
@@ -221,3 +223,9 @@ class Parameters:
 
     def get_sampling_rate(self):
         return self.sampling_rate
+
+    def set_opto_tagging_done(self, ot):
+        Parameters.opto_tagging_done = ot
+
+    def get_opto_tagging_done(self):
+        return self.opto_tagging_done

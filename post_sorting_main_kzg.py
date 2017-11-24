@@ -40,6 +40,7 @@ Initializes parameters
 
 
 def init_params():
+    prm.set_opto_tagging_done(True)
     prm.set_filepath('D:\\open_field_test\\')
     prm.set_sampling_rate(30000)
 

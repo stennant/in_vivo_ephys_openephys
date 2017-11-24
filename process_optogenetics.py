@@ -22,3 +22,13 @@ def save_or_open_light(prm):
     # plt.show()
 
     return light_intensity
+
+
+def process_opto(prm):
+    save_or_open_light(prm)
+
+
+def plot_light_responses(prm, spike_times_of_unit):
+    light_on_indices = np.load(prm.get_filepath() + 'light_on_indices.npy')
+    plt.plot(light_on_indices)
+    plt.show()

@@ -1,5 +1,6 @@
 import mdaio
 import numpy as np
+import process_optogenetics
 
 
 def get_firing_info(prm):
@@ -35,6 +36,9 @@ def process_firing_times(prm):
     firing_times_unit = get_firing_times_of_unit(prm, 1)
     ch_ids_unit = get_channel_ids_for_unit(prm, 4)
     # call histogram/ plotting functions for each cell here
+    if prm.get_opto_tagging_done() is True:
+        process_optogenetics.plot_light_responses(prm, firing_times_unit)
+
 
 
 
