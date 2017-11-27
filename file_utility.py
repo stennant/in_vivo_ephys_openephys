@@ -49,6 +49,11 @@ def create_ephys_folder_structure(prm):
     spike_path = ephys_path + '\\Spike_sorting'
     prm.set_spike_path(spike_path)
 
+    sorting_t1_path = spike_path + '\\t1_' + prm.get_date()
+    sorting_t2_path = spike_path + '\\t2_' + prm.get_date()
+    sorting_t3_path = spike_path + '\\t3_' + prm.get_date()
+    sorting_t4_path = spike_path + '\\t4_' + prm.get_date()
+
     analysis_path = ephys_path + '\\Analysis'
     prm.set_ephys_analysis_path(analysis_path)
 
@@ -58,6 +63,10 @@ def create_ephys_folder_structure(prm):
     if os.path.exists(ephys_path) is False:
         os.makedirs(ephys_path)
         os.makedirs(spike_path)
+        os.makedirs(sorting_t1_path)
+        os.makedirs(sorting_t2_path)
+        os.makedirs(sorting_t3_path)
+        os.makedirs(sorting_t4_path)
         os.makedirs(analysis_path)
         os.makedirs(data_path)
 

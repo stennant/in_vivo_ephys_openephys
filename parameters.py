@@ -14,6 +14,7 @@ class Parameters:
 
     filepath = ''
     filename = ''
+    date = ''
     file = ''
     behaviour_path = ''
     behaviour_analysis_path = ''
@@ -42,6 +43,7 @@ class Parameters:
     recording_size = 0
     tetrode = 0
 
+
     opto_tagging_done = False
 
 
@@ -59,6 +61,12 @@ class Parameters:
 
     def set_is_open_field(self, is_open_field):
         Parameters.is_open_field = is_open_field
+
+    def get_date(self):
+        return Parameters.date
+
+    def set_date(self, dt):
+        Parameters.date = dt
 
     def get_filepath(self):
         return Parameters.filepath

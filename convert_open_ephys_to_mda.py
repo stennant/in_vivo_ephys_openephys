@@ -3,6 +3,7 @@ Functions for converting open ephys data to mountainsort's mda format
 
 '''
 
+import file_utility
 import matplotlib.pylab as plt
 import mdaio
 import numpy as np
@@ -55,22 +56,25 @@ def get_peak_indices(waveforms, samples_per_spike):
 
 
 def convert_spk_to_mda(prm):
+    file_utility.create_ephys_folder_structure(prm)
+
     folder_path = prm.get_filepath()
+    spike_data_path = prm.get_spike_path() + '\\'
     number_of_tetrodes = prm.get_num_tetrodes()
     samples_per_spike = prm.get_waveform_size()
 
     for tetrode in range(number_of_tetrodes):
         file_path = folder_path + 'TT' + str(tetrode) + '.spikes'
-        waveforms, timestamps = open_ephys_IO.get_data_spike(folder_path, file_path, 'TT' + str(tetrode))
-        np.save(folder_path + 'TT' + str(tetrode) + '_timestamps', timestamps)  # todo: this is shifted by 10 seconds relative to light and location!
+        waveforms, timestamps = open_ephys_IO.get_data_spike(folder_path, file_path, 'TT' + str(tetrode + 1))
+        np.save(spike_data_path + 't' + str(tetrode + 1) + '_' + prm.get_date() + '\\TT' + str(tetrode + 1) + '_timestamps', timestamps)  # todo: this is shifted by 10 seconds relative to light and location!
 
         padded_array = get_padded_array(waveforms, samples_per_spike)
 
-        mdaio.writemda16i(padded_array, folder_path + 'raw.nt' + str(tetrode) + '.mda')
+        mdaio.writemda16i(padded_array, spike_data_path + 't' + str(tetrode + 1) + '_' + prm.get_date() + '\\raw.nt' + str(tetrode + 1) + '.mda')
         peak_indices = get_peak_indices(waveforms, samples_per_spike)
-        mdaio.writemda32i(peak_indices, folder_path + 'event_times.nt' + str(tetrode) + '.mda')
+        mdaio.writemda32i(peak_indices, spike_data_path + 't' + str(tetrode + 1) + '_' + prm.get_date() + '\\event_times.nt' + str(tetrode + 1) + '.mda')
         
-        mdaio.writemda32(timestamps, folder_path + 'timestamps.nt' + str(tetrode) + '.mda')
+        mdaio.writemda32(timestamps, spike_data_path + 't' + str(tetrode + 1) + '_' + prm.get_date() + '\\timestamps.nt' + str(tetrode + 1) + '.mda')
 
 
 
