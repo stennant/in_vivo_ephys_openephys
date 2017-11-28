@@ -1,5 +1,6 @@
 import convert_open_ephys_to_mda
 import glob
+import make_sorting_database
 import os
 import parameters
 import vr_process_movement
@@ -60,6 +61,7 @@ def process_a_dir(dir_name):
     print('All folders in {} will be processed.'.format(dir_name))
     prm.set_date(dir_name.rsplit('\\', 2)[-2])
     prm.set_filepath(dir_name)
+    make_sorting_database.write_dataset_txt_file(prm)
     convert_open_ephys_to_mda.convert_spk_to_mda(prm)
 
     if prm.is_vr is True:

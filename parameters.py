@@ -19,6 +19,7 @@ class Parameters:
     behaviour_path = ''
     behaviour_analysis_path = ''
     behaviour_data_path = ''
+    mountain_sort_path = ''
 
     spike_path = ''
     ephys_path = ''
@@ -123,6 +124,13 @@ class Parameters:
 
     def set_ephys_analysis_path(self, ed):
         Parameters.ephys_analysis_path = ed
+
+    def get_mountain_sort_path(self):
+        return self.mountain_sort_path
+
+    def set_klustakwik_path(self, ms):
+        Parameters.mountain_sort_path = ms
+
 
 
     def get_klustakwik_path(self):
