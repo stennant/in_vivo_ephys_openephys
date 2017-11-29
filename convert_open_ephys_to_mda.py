@@ -8,6 +8,7 @@ import matplotlib.pylab as plt
 import mdaio
 import numpy as np
 import open_ephys_IO
+import os
 
 
 def pad_event(waveforms, channel, samples_per_spike, event):
@@ -56,25 +57,27 @@ def get_peak_indices(waveforms, samples_per_spike):
 
 
 def convert_spk_to_mda(prm):
-    file_utility.create_ephys_folder_structure(prm)
-
+    file_utility.create_folder_structure(prm)
     folder_path = prm.get_filepath()
     spike_data_path = prm.get_spike_path() + '\\'
     number_of_tetrodes = prm.get_num_tetrodes()
     samples_per_spike = prm.get_waveform_size()
 
-    for tetrode in range(number_of_tetrodes):
-        file_path = folder_path + 'TT' + str(tetrode) + '.spikes'
-        waveforms, timestamps = open_ephys_IO.get_data_spike(folder_path, file_path, 'TT' + str(tetrode + 1))
-        np.save(spike_data_path + 't' + str(tetrode + 1) + '_' + prm.get_date() + '\\TT' + str(tetrode + 1) + '_timestamps', timestamps)  # todo: this is shifted by 10 seconds relative to light and location!
+    if os.path.isfile(spike_data_path + 't1_' + prm.get_date() + '\\raw.nt1.mda') is False:
+        file_utility.create_ephys_folder_structure(prm)
 
-        padded_array = get_padded_array(waveforms, samples_per_spike)
+        for tetrode in range(number_of_tetrodes):
+            file_path = folder_path + 'TT' + str(tetrode) + '.spikes'
+            waveforms, timestamps = open_ephys_IO.get_data_spike(folder_path, file_path, 'TT' + str(tetrode + 1))
+            np.save(spike_data_path + 't' + str(tetrode + 1) + '_' + prm.get_date() + '\\TT' + str(tetrode + 1) + '_timestamps', timestamps)  # todo: this is shifted by 10 seconds relative to light and location!
 
-        mdaio.writemda16i(padded_array, spike_data_path + 't' + str(tetrode + 1) + '_' + prm.get_date() + '\\raw.nt' + str(tetrode + 1) + '.mda')
-        peak_indices = get_peak_indices(waveforms, samples_per_spike)
-        mdaio.writemda32i(peak_indices, spike_data_path + 't' + str(tetrode + 1) + '_' + prm.get_date() + '\\event_times.nt' + str(tetrode + 1) + '.mda')
-        
-        mdaio.writemda32(timestamps, spike_data_path + 't' + str(tetrode + 1) + '_' + prm.get_date() + '\\timestamps.nt' + str(tetrode + 1) + '.mda')
+            padded_array = get_padded_array(waveforms, samples_per_spike)
+
+            mdaio.writemda16i(padded_array, spike_data_path + 't' + str(tetrode + 1) + '_' + prm.get_date() + '\\raw.nt' + str(tetrode + 1) + '.mda')
+            peak_indices = get_peak_indices(waveforms, samples_per_spike)
+            mdaio.writemda32i(peak_indices, spike_data_path + 't' + str(tetrode + 1) + '_' + prm.get_date() + '\\event_times.nt' + str(tetrode + 1) + '.mda')
+
+            mdaio.writemda32(timestamps, spike_data_path + 't' + str(tetrode + 1) + '_' + prm.get_date() + '\\timestamps.nt' + str(tetrode + 1) + '.mda')
 
 
 

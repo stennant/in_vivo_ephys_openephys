@@ -2,6 +2,41 @@ import os
 from shutil import copyfile
 
 
+def write_batch_file_for_sorting(prm):
+    create_sorting_folder_structure(prm)
+    name_of_dataset = prm.get_date()
+    file_path = prm.get_filepath()
+    main_folder_name = file_path.rsplit('\\', 3)[-3]
+    main_path = file_path.rsplit('\\', 3)[-4]
+
+    if os.path.isfile(main_path + main_folder_name + "\\" + "\\run_sorting.sh") is False:
+        batch_writer = open(main_path + '\\run_sorting.sh', 'w')
+        batch_writer.write('#!/bin/bash\n')
+        batch_writer.write('echo "-----------------------------------------------------------------------------------"\n')
+        batch_writer.write('echo "This is a shell script that will run mountain sort on all recordings in the folder."\n')
+
+        export_path = 'export PATH=~/mountainlab/bin:$PATH\n'
+        batch_writer.write(export_path)
+    else:
+        batch_writer = open(main_path + '\\run_sorting.sh', 'a')
+
+    for tetrode in range(4):
+        data_folder_name = 't' + str(tetrode + 1) + '_' + name_of_dataset
+
+        tetrode_mda_path = main_path + '/' + main_folder_name + '/' + data_folder_name
+        tetrode_prv_path = main_path + '/' + main_folder_name + '_sort/' + data_folder_name
+        mda_file_name = '/raw.nt' + str(tetrode + 1) + '.mda'
+        prv_file_name = '/raw.mda.prv'
+
+        batch_writer.write('echo "I am making prv files now."\n')
+        create_prv = 'prv-create ' + tetrode_mda_path + mda_file_name + ' ' + tetrode_prv_path + prv_file_name + '\n'
+        create_prv = create_prv.replace("\\", "/")
+        batch_writer.write(create_prv)
+
+        batch_writer.write('echo "I am calling mountainsort now."\n')
+        batch_writer.write('kron-run ms3 ' + main_folder_name + '_sort\n')
+
+
 def write_dataset_txt_file(prm):
     create_sorting_folder_structure(prm)
     name_of_dataset = prm.get_date()
@@ -49,3 +84,7 @@ def create_sorting_folder_structure(prm):
                       'It should be in the same folder as the dataset, '
                       'and is should have params.json in there so that is can be copied to all folders.')
 
+
+def create_sorting_environment(prm):
+    write_dataset_txt_file(prm)
+    write_batch_file_for_sorting(prm)

@@ -1,6 +1,7 @@
 import open_ephys_IO
 import matplotlib.pylab as plt
 import numpy as np
+import os
 
 
 # This is necessary because of artefacts at the beginning and end of the recordings. 5 seconds are removed
@@ -25,7 +26,10 @@ def save_or_open_light(prm):
 
 
 def process_opto(prm):
-    save_or_open_light(prm)
+    folder_path = prm.get_filepath()
+    file_path = prm.get_filepath() + prm.get_opto_ch()
+    if os.path.isfile(prm.get_filepath() + 'light_on_indices') is False:
+        save_or_open_light(prm)
 
 
 def plot_light_responses(prm, spike_times_of_unit):
