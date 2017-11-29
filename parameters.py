@@ -128,7 +128,7 @@ class Parameters:
     def get_mountain_sort_path(self):
         return self.mountain_sort_path
 
-    def set_klustakwik_path(self, ms):
+    def set_mountain_sort_path(self, ms):
         Parameters.mountain_sort_path = ms
 
 

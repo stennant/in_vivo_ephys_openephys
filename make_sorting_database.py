@@ -1,4 +1,5 @@
 import os
+from shutil import copyfile
 
 
 def write_dataset_txt_file(prm):
@@ -8,7 +9,7 @@ def write_dataset_txt_file(prm):
     main_folder_name = file_path.rsplit('\\', 3)[-3]
     main_path = file_path.rsplit('\\', 3)[-4]
 
-    if os.path.isfile(main_folder_name + '_sort' + "\\datasets.txt") is False:
+    if os.path.isfile(main_path + "\\datasets.txt") is False:
         datasets_writer = open(main_path + '\\datasets.txt', 'w')
     else:
         datasets_writer = open(main_path + '\\datasets.txt', 'a')
@@ -41,3 +42,10 @@ def create_sorting_folder_structure(prm):
 
         if os.path.exists(current_folder) is False:
             os.makedirs(current_folder)
+            try:
+                copyfile(main_path + '\\sorting_files\\params.json', current_folder + '\\params.json')
+            except FileNotFoundError:
+                print('Something is wrong with the sorting_files folder. '
+                      'It should be in the same folder as the dataset, '
+                      'and is should have params.json in there so that is can be copied to all folders.')
+
