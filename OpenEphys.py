@@ -31,6 +31,7 @@ MAX_NUMBER_OF_SPIKES = int(1e6)
 MAX_NUMBER_OF_RECORDS = int(1e6)
 MAX_NUMBER_OF_EVENTS = int(1e6)
 
+
 def load(filepath):
 
     # redirects to code for individual file types
@@ -44,6 +45,7 @@ def load(filepath):
         raise Exception("Not a recognized file type. Please input a .continuous, .spikes, or .events file")
 
     return data
+
 
 def loadFolder(folderpath,**kwargs):
 
