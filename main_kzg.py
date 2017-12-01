@@ -62,6 +62,8 @@ def process_a_dir(dir_name):
     prm.set_date(dir_name.rsplit('\\', 2)[-2])
     prm.set_filepath(dir_name)
     make_sorting_database.create_sorting_environment(prm)
+
+    convert_open_ephys_to_mda.convert_continuous_to_mda(prm)
     convert_open_ephys_to_mda.convert_spk_to_mda(prm)
 
     if prm.is_vr is True:

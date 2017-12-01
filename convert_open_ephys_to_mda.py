@@ -80,4 +80,32 @@ def convert_spk_to_mda(prm):
             mdaio.writemda32(timestamps, spike_data_path + 't' + str(tetrode + 1) + '_' + prm.get_date() + '\\timestamps.nt' + str(tetrode + 1) + '.mda')
 
 
+def convert_continuous_to_mda(prm):
+    number_of_tetrodes = prm.get_num_tetrodes()
+    folder_path = prm.get_filepath()
+    spike_data_path = prm.get_spike_path() + '\\'
+    channel_data_all = []
+
+    for tetrode in range(number_of_tetrodes):
+        for channel in range(4):
+            file_path = folder_path + '100_CH' + str(tetrode*4 + channel + 1) + '.continuous'
+            channel_data = open_ephys_IO.get_data_continuous(prm, file_path)
+            channel_data_all.append(channel_data)
+
+        recording_length = len(channel_data_all[0])
+        channels_tetrode = np.zeros((4, recording_length))
+
+        for ch in range(4):
+            channels_tetrode[ch, :] = channel_data_all[ch]
+        # write mda file from channels_tetrode here
+
+
+
+
+
+
+
+
+
+
 
