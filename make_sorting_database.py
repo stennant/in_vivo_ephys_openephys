@@ -72,7 +72,7 @@ def write_dataset_txt_file(prm):
     for tetrode in range(4):
         data_folder_name = 't' + str(tetrode + 1) + '_' + name_of_dataset
         line = data_folder_name + ' ' + 'datasets/' + data_folder_name
-        line_continuous = data_folder_name + '_continuous ' + 'datasets/' + data_folder_name
+        line_continuous = data_folder_name + '_continuous ' + 'datasets/' + data_folder_name + '_continuous '
 
         print(line)
         datasets_writer.write(line)
