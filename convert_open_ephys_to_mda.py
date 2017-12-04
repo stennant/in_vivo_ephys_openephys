@@ -81,10 +81,14 @@ def convert_spk_to_mda(prm):
 
 
 def convert_continuous_to_mda(prm):
+    file_utility.create_folder_structure(prm)
     number_of_tetrodes = prm.get_num_tetrodes()
     folder_path = prm.get_filepath()
     spike_data_path = prm.get_spike_path() + '\\'
     channel_data_all = []
+
+    if os.path.isfile(spike_data_path + 't1_' + prm.get_date() + '\\raw.nt1.mda') is False:
+        file_utility.create_ephys_folder_structure(prm)
 
     for tetrode in range(number_of_tetrodes):
         for channel in range(4):
@@ -97,7 +101,7 @@ def convert_continuous_to_mda(prm):
 
         for ch in range(4):
             channels_tetrode[ch, :] = channel_data_all[ch]
-        # write mda file from channels_tetrode here
+        mdaio.writemda16i(channels_tetrode, spike_data_path + 't' + str(tetrode + 1) + '_' + prm.get_date() + '_continuous\\raw.nt' + str(tetrode + 1) + '.mda')
 
 
 

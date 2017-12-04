@@ -28,9 +28,12 @@ def write_batch_file_for_sorting(prm):
 
     for tetrode in range(4):
         data_folder_name = 't' + str(tetrode + 1) + '_' + name_of_dataset
+        data_folder_name_continuous = 't' + str(tetrode + 1) + '_' + name_of_dataset + '_continuous'
 
         tetrode_mda_path = file_path_linux + '/Electrophysiology/Spike_sorting/' + data_folder_name
         tetrode_prv_path = main_path + '/datasets/' + data_folder_name
+        tetrode_prv_path_continuous = '/datasets/' + data_folder_name + '_continuous'
+
         mda_file_name = '/raw.nt' + str(tetrode + 1) + '.mda'
         prv_file_name = '/raw.mda.prv'
 
@@ -41,8 +44,15 @@ def write_batch_file_for_sorting(prm):
         create_prv = create_prv.replace("//", "/")
         batch_writer.write(create_prv)
 
+        create_prv_continuous = 'prv-create ' + tetrode_mda_path + mda_file_name + ' ' + tetrode_prv_path_continuous + prv_file_name + '\n'
+        create_prv_continuous = create_prv_continuous.replace("\\", "/")
+        create_prv_continuous = create_prv_continuous.replace("//", "/")
+        batch_writer.write(create_prv_continuous)
+
         batch_writer.write('echo "I am calling mountainsort now."\n')
         batch_writer.write('kron-run ms3 ' + data_folder_name + '\n')
+
+        batch_writer.write('kron-run ms3 ' + data_folder_name_continuous + '\n')
 
 
 def write_dataset_txt_file(prm):
@@ -60,8 +70,12 @@ def write_dataset_txt_file(prm):
     for tetrode in range(4):
         data_folder_name = 't' + str(tetrode + 1) + '_' + name_of_dataset
         line = data_folder_name + ' ' + 'datasets/' + data_folder_name
+        line_continuous = data_folder_name + '_continuous ' + 'datasets/' + data_folder_name
+
         print(line)
         datasets_writer.write(line)
+        datasets_writer.write('\n')
+        datasets_writer.write(line_continuous)
         datasets_writer.write('\n')
 
     datasets_writer.close()
@@ -85,11 +99,15 @@ def create_sorting_folder_structure(prm):
     for tetrode in range(4):
         data_folder_name = 't' + str(tetrode + 1) + '_' + name_of_dataset
         current_folder = main_path + '\\datasets\\' + data_folder_name
+        current_folder_continuous = main_path + '\\datasets\\' + data_folder_name + '_continuous'
+
 
         if os.path.exists(current_folder) is False:
             os.makedirs(current_folder)
+            os.makedirs(current_folder_continuous)
             try:
                 copyfile(main_path + '\\sorting_files\\params.json', current_folder + '\\params.json')
+                copyfile(main_path + '\\sorting_files\\params.json', current_folder_continuous + '\\params.json')
             except FileNotFoundError:
                 print('Something is wrong with the sorting_files folder. '
                       'It should be in the same folder as the dataset, '
