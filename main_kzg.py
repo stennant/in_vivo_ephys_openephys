@@ -41,7 +41,9 @@ Initializes parameters
 
 def init_params():
     # prm.set_filepath('D:\\open_field_test\\test\\')
-    prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Klara\\open_field_setup\\test_recordings\\sorting_test\\recordings\\')
+    # prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Klara\\open_field_setup\\test_recordings\\sorting_test\\recordings\\')
+    prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Tizzy\\Cohort3\\TestProject\\recordings\\')
+
     prm.set_sampling_rate(30000)
 
     # f prm.set_filename('TT3.spikes')

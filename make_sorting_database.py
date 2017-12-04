@@ -31,6 +31,8 @@ def write_batch_file_for_sorting(prm):
         data_folder_name_continuous = 't' + str(tetrode + 1) + '_' + name_of_dataset + '_continuous'
 
         tetrode_mda_path = file_path_linux + '/Electrophysiology/Spike_sorting/' + data_folder_name
+        tetrode_mda_path_continuous = file_path_linux + '/Electrophysiology/Spike_sorting/' + data_folder_name + '_continuous'
+
         tetrode_prv_path = main_path + '/datasets/' + data_folder_name
         tetrode_prv_path_continuous = '/datasets/' + data_folder_name + '_continuous'
 
@@ -44,7 +46,7 @@ def write_batch_file_for_sorting(prm):
         create_prv = create_prv.replace("//", "/")
         batch_writer.write(create_prv)
 
-        create_prv_continuous = 'prv-create ' + tetrode_mda_path + mda_file_name + ' ' + tetrode_prv_path_continuous + prv_file_name + '\n'
+        create_prv_continuous = 'prv-create ' + tetrode_mda_path_continuous + mda_file_name + ' ' + tetrode_prv_path_continuous + prv_file_name + '\n'
         create_prv_continuous = create_prv_continuous.replace("\\", "/")
         create_prv_continuous = create_prv_continuous.replace("//", "/")
         batch_writer.write(create_prv_continuous)

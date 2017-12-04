@@ -92,7 +92,7 @@ def convert_continuous_to_mda(prm):
 
     for tetrode in range(number_of_tetrodes):
         for channel in range(4):
-            file_path = folder_path + '100_CH' + str(tetrode*4 + channel + 1) + '.continuous'
+            file_path = folder_path + '105_CH' + str(tetrode*4 + channel + 1) + '_0.continuous' #todo this should bw in params, it is 100 for me, 105 for Tizzy (I don't have _0)
             channel_data = open_ephys_IO.get_data_continuous(prm, file_path)
             channel_data_all.append(channel_data)
 
