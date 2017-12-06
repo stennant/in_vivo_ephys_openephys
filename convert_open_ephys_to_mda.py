@@ -92,7 +92,7 @@ def convert_continuous_to_mda(prm):
 
     for tetrode in range(number_of_tetrodes):
         for channel in range(4):
-            file_path = folder_path + '105_CH' + str(tetrode*4 + channel + 1) + '_0.continuous' #todo this should bw in params, it is 100 for me, 105 for Tizzy (I don't have _0)
+            file_path = folder_path + '100_CH' + str(tetrode*4 + channel + 1) + '.continuous' #todo this should bw in params, it is 100 for me, 105 for Tizzy (I don't have _0)
             channel_data = open_ephys_IO.get_data_continuous(prm, file_path)
             channel_data_all.append(channel_data)
 
@@ -102,6 +102,30 @@ def convert_continuous_to_mda(prm):
         for ch in range(4):
             channels_tetrode[ch, :] = channel_data_all[ch]
         mdaio.writemda16i(channels_tetrode, spike_data_path + 't' + str(tetrode + 1) + '_' + prm.get_date() + '_continuous\\raw.nt' + str(tetrode + 1) + '.mda')
+
+
+def convert_all_tetrodes_to_mda(prm):
+    file_utility.create_folder_structure(prm)
+    number_of_tetrodes = prm.get_num_tetrodes()
+    folder_path = prm.get_filepath()
+    spike_data_path = prm.get_spike_path() + '\\'
+    channel_data_all = []
+
+    path = spike_data_path + 'raw' + '.mda'
+
+    for channel in range(16):
+        file_path = folder_path + '100_CH' + str(channel + 1) + '.continuous'
+        channel_data = open_ephys_IO.get_data_continuous(prm, file_path)
+        channel_data_all.append(channel_data)
+
+    recording_length = len(channel_data_all[0])
+
+    channels_all = np.zeros((number_of_tetrodes*4, recording_length))
+
+    for ch in range(16):
+        channels_all[ch, :] = channel_data_all[ch]
+    mdaio.writemda16i(channels_all, path)
+
 
 
 

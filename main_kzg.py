@@ -40,9 +40,10 @@ Initializes parameters
 
 
 def init_params():
-    # prm.set_filepath('D:\\open_field_test\\test\\')
-    # prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Klara\\open_field_setup\\test_recordings\\sorting_test\\recordings\\')
-    prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Tizzy\\Cohort3\\TestProject\\recordings\\')
+    # prm.set_filepath('D:\\sort\\mountainsort_test\\open_field_test\\test\\')
+    prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Klara\\open_field_setup\\test_recordings\\potato\\recordings\\')
+    # prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Tizzy\\Cohort3\\TestProject\\recordings\\')
+    # prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Sarah\\Experimental_Projects\\PVCre1_PIProject_Opto\\Data\\Ephys\\566\\Day2\\')
 
     prm.set_sampling_rate(30000)
 
@@ -65,8 +66,10 @@ def process_a_dir(dir_name):
     prm.set_filepath(dir_name)
     make_sorting_database.create_sorting_environment(prm)
 
-    convert_open_ephys_to_mda.convert_continuous_to_mda(prm)
-    convert_open_ephys_to_mda.convert_spk_to_mda(prm)
+    convert_open_ephys_to_mda.convert_all_tetrodes_to_mda(prm)
+
+    #convert_open_ephys_to_mda.convert_continuous_to_mda(prm)
+    #convert_open_ephys_to_mda.convert_spk_to_mda(prm)
 
     if prm.is_vr is True:
         vr_process_movement.save_or_open_movement_arrays(prm)
