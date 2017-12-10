@@ -59,6 +59,14 @@ def create_ephys_folder_structure(prm):
     sorting_t3_path_continuous = spike_path + '\\t3_' + prm.get_date() + '_continuous'
     sorting_t4_path_continuous = spike_path + '\\t4_' + prm.get_date() + '_continuous'
 
+    mountain_data_folder_t1 = spike_path + '\\t1_' + prm.get_date() + '_continuous\\data'
+    mountain_data_folder_t2 = spike_path + '\\t2_' + prm.get_date() + '_continuous\\data'
+    mountain_data_folder_t3 = spike_path + '\\t3_' + prm.get_date() + '_continuous\\data'
+    mountain_data_folder_t4 = spike_path + '\\t4_' + prm.get_date() + '_continuous\\data'
+
+    mountain_data = spike_path + '\\all_tetrodes'
+    mountain_data_data = mountain_data + '\\data'
+
     analysis_path = ephys_path + '\\Analysis'
     prm.set_ephys_analysis_path(analysis_path)
 
@@ -77,8 +85,16 @@ def create_ephys_folder_structure(prm):
         os.makedirs(sorting_t3_path_continuous)
         os.makedirs(sorting_t4_path_continuous)
 
+        os.makedirs(mountain_data_folder_t1)
+        os.makedirs(mountain_data_folder_t2)
+        os.makedirs(mountain_data_folder_t3)
+        os.makedirs(mountain_data_folder_t4)
+
         os.makedirs(analysis_path)
         os.makedirs(data_path)
+
+        os.makedirs(mountain_data)
+        os.makedirs(mountain_data_data)
 
 
 def create_folder_structure(prm):

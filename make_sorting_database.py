@@ -2,6 +2,31 @@ import os
 from shutil import copyfile
 
 
+# this is for the 2017 November version of ms
+def organize_files_for_ms(prm):
+    file_path = prm.get_filepath()
+    main_path = file_path.rsplit('\\', 3)[-4]
+    spike_path = prm.get_spike_path()
+    mountain_path = spike_path + '\\all_tetrodes'
+    mountain_path_data = mountain_path + '\\data\\'
+
+
+    try:
+        copyfile(main_path + '\\sorting_files\\params.json', mountain_path + '\\params.json')
+        copyfile(main_path + '\\sorting_files\\mountainsort3.mlp', mountain_path + '\\mountainsort3.mlp')
+
+        copyfile(main_path + '\\sorting_files\\params.json', mountain_path_data + '\\params.json')
+        copyfile(main_path + '\\sorting_files\\geom.csv', mountain_path_data + '\\geom.csv')
+
+    except FileNotFoundError:
+        print('Something is wrong with the sorting_files folder. '
+              'It should be in the same folder as the dataset. ')
+
+
+
+
+
+# ms3 version
 def write_batch_file_for_sorting(prm):
     # /run/user/1000/gvfs/smb-share:server=cmvm.datastore.ed.ac.uk,share=cmvm/sbms/groups/mnolan_NolanLab/ActiveProjects/Klara/open_field_setup/test_recordings/sorting_test
     create_sorting_folder_structure(prm)
@@ -91,29 +116,34 @@ def create_sorting_folder_structure(prm):
     main_path = file_path.rsplit('\\', 3)[-4]
     mountain_sort_folders = main_path + '\\' + '/datasets/'
     prm.set_mountain_sort_path(mountain_sort_folders)
+    spike_path = prm.get_spike_path()
 
     if os.path.exists(mountain_sort_folders) is False:
         os.makedirs(mountain_sort_folders)
 
-    copyfile(main_path + '\\sorting_files\\curation.script', main_path + '\\curation.script')
-    copyfile(main_path + '\\sorting_files\\pipelines.txt', main_path + '\\pipelines.txt')
+    # copyfile(main_path + '\\sorting_files\\curation.script', main_path + '\\curation.script')
+    # copyfile(main_path + '\\sorting_files\\pipelines.txt', main_path + '\\pipelines.txt')
 
     for tetrode in range(4):
         data_folder_name = 't' + str(tetrode + 1) + '_' + name_of_dataset
-        current_folder = main_path + '\\datasets\\' + data_folder_name
-        current_folder_continuous = main_path + '\\datasets\\' + data_folder_name + '_continuous'
+        current_folder = spike_path + '\\' + data_folder_name
+        current_folder_continuous = spike_path + '\\' + data_folder_name + '_continuous'
 
-
-        if os.path.exists(current_folder) is False:
+        if os.path.exists(current_folder_continuous) is False:
             os.makedirs(current_folder)
             os.makedirs(current_folder_continuous)
-            try:
-                copyfile(main_path + '\\sorting_files\\params.json', current_folder + '\\params.json')
-                copyfile(main_path + '\\sorting_files\\params.json', current_folder_continuous + '\\params.json')
-            except FileNotFoundError:
-                print('Something is wrong with the sorting_files folder. '
-                      'It should be in the same folder as the dataset, '
-                      'and is should have params.json in there so that is can be copied to all folders.')
+        try:
+            copyfile(main_path + '\\sorting_files\\params.json', current_folder + '\\params.json')
+            copyfile(main_path + '\\sorting_files\\params.json', current_folder_continuous + '\\params.json')
+            copyfile(main_path + '\\sorting_files\\params.json', current_folder_continuous + '\\params.json')
+            copyfile(main_path + '\\sorting_files\\mountainsort3.mlp', current_folder_continuous + '\\mountainsort3.mlp')
+
+            copyfile(main_path + '\\sorting_files\\params.json', current_folder_continuous + '\\data\\params.json')
+            copyfile(main_path + '\\sorting_files\\geom.csv', current_folder_continuous + '\\data\\geom.csv')
+        except FileNotFoundError:
+            print('Something is wrong with the sorting_files folder. '
+                  'It should be in the same folder as the dataset, '
+                  'and is should have params.json in there so that is can be copied to all folders.')
 
 
 def create_sorting_environment(prm):

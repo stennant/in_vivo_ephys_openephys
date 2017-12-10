@@ -6,6 +6,7 @@ Functions for converting open ephys data to mountainsort's mda format
 import file_utility
 import matplotlib.pylab as plt
 import mdaio
+import make_sorting_database
 import numpy as np
 import open_ephys_IO
 import os
@@ -82,17 +83,19 @@ def convert_spk_to_mda(prm):
 
 def convert_continuous_to_mda(prm):
     file_utility.create_folder_structure(prm)
+    # make_sorting_database.create_sorting_folder_structure(prm)
     number_of_tetrodes = prm.get_num_tetrodes()
     folder_path = prm.get_filepath()
     spike_data_path = prm.get_spike_path() + '\\'
-    channel_data_all = []
+    continuous_file_name = prm.get_continuous_file_name()
 
-    if os.path.isfile(spike_data_path + 't1_' + prm.get_date() + '\\raw.nt1.mda') is False:
+    if os.path.isfile(spike_data_path + 't1_' + prm.get_date() + '\\raw.mda') is False:
         file_utility.create_ephys_folder_structure(prm)
 
     for tetrode in range(number_of_tetrodes):
+        channel_data_all = []
         for channel in range(4):
-            file_path = folder_path + '100_CH' + str(tetrode*4 + channel + 1) + '.continuous' #todo this should bw in params, it is 100 for me, 105 for Tizzy (I don't have _0)
+            file_path = folder_path + continuous_file_name + str(tetrode*4 + channel + 1) + '.continuous'
             channel_data = open_ephys_IO.get_data_continuous(prm, file_path)
             channel_data_all.append(channel_data)
 
@@ -101,29 +104,30 @@ def convert_continuous_to_mda(prm):
 
         for ch in range(4):
             channels_tetrode[ch, :] = channel_data_all[ch]
-        mdaio.writemda16i(channels_tetrode, spike_data_path + 't' + str(tetrode + 1) + '_' + prm.get_date() + '_continuous\\raw.nt' + str(tetrode + 1) + '.mda')
+        mdaio.writemda16i(channels_tetrode, spike_data_path + 't' + str(tetrode + 1) + '_' + prm.get_date() + '_continuous\\data\\raw.mda')
 
 
 def convert_all_tetrodes_to_mda(prm):
     file_utility.create_folder_structure(prm)
+    make_sorting_database.organize_files_for_ms(prm)
     number_of_tetrodes = prm.get_num_tetrodes()
     folder_path = prm.get_filepath()
     spike_data_path = prm.get_spike_path() + '\\'
-    channel_data_all = []
 
-    path = spike_data_path + 'raw' + '.mda'
+    path = spike_data_path + 'all_tetrodes\\data\\raw.mda'
 
-    for channel in range(16):
-        file_path = folder_path + '100_CH' + str(channel + 1) + '.continuous'
-        channel_data = open_ephys_IO.get_data_continuous(prm, file_path)
-        channel_data_all.append(channel_data)
-
-    recording_length = len(channel_data_all[0])
-
+    file_path = folder_path + '100_CH' + str(1) + '.continuous'
+    first_ch = open_ephys_IO.get_data_continuous(prm, file_path)
+    recording_length = len(first_ch)
     channels_all = np.zeros((number_of_tetrodes*4, recording_length))
+    channels_all[0, :] = first_ch
 
-    for ch in range(16):
-        channels_all[ch, :] = channel_data_all[ch]
+
+    for channel in range(15):
+        file_path = folder_path + '100_CH' + str(channel + 2) + '.continuous'
+        channel_data = open_ephys_IO.get_data_continuous(prm, file_path)
+        channels_all[channel + 1, :] = channel_data
+
     mdaio.writemda16i(channels_all, path)
 
 
