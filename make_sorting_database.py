@@ -69,6 +69,12 @@ def write_bash_script_for_sorting_all_tetrodes(prm):
     firings_out_path = mountain_main_data_path + '/firings.mda'
     pre_out_path = mountain_main_data_path + '/pre.mda'
     filt_out_path = mountain_main_data_path + '/filt.mda'
+    ###########################################################################################################
+    firings_original_path = mountain_main_data_path + '/firings_original.mda'
+    metrics_1_path = mountain_main_data_path + '/metrics1.mda'
+    metrics_2_path = mountain_main_data_path + '/metrics2.mda'
+    metric_path = mountain_main_data_path + '/metrics2.mda'
+
     params_path = mountain_main_path + '/params.json'
 
     batch_writer.write('echo "I am calling mountainsort now for all tetrodes combined, {0}."\n'.format(name_of_dataset))
