@@ -2,53 +2,51 @@ import numpy as np
 import struct
 
 class MdaHeader:
+    dt_code=0
+    dt='float32'
+    num_bytes_per_entry=0
+    num_dims=2
+    dimprod=1
+    dims=[]
+    header_size=0
     def __init__(self, dt0, dims0):
-        uses64bitdims=(max(dims0)>2e9)
-        self.uses64bitdims=uses64bitdims
         self.dt_code=_dt_code_from_dt(dt0)
         self.dt=dt0
-        self.num_bytes_per_entry=get_num_bytes_per_entry_from_dt(dt0)
+        self.num_bytes_per_entry=_num_bytes_per_entry_from_dt(dt0)
         self.num_dims=len(dims0)
         self.dimprod=np.prod(dims0)
         self.dims=dims0
-        if uses64bitdims:
-            self.header_size=3*4+self.num_dims*8
-        else:
-            self.header_size=(3+self.num_dims)*4
+        self.header_size=(3+len(dims0))*4
 
 class DiskReadMda:
-    def __init__(self,path,header=None):
+    _path=''
+    _header=None
+    def __init__(self,path):
         self._path=path
-        if header:
-            self._header=header
-            self._header.header_size=0
-        else:
-            self._header=_read_header(self._path)
+        self._header=_read_header(self._path)
     def dims(self):
         return self._header.dims
     def N1(self):
-        return int(self._header.dims[0])
+        return self._header.dims[0]
     def N2(self):
-        return int(self._header.dims[1])
+        return self._header.dims[1]
     def N3(self):
-        return int(self._header.dims[2])
-    def dt(self):
-        return self._header.dt
+        return self._header.dims[2]
     def readChunk(self,i1=-1,i2=-1,i3=-1,N1=1,N2=1,N3=1):
         if (i2<0):
             return self._read_chunk_1d(i1,N1)
         elif (i3<0):
             if N1 != self._header.dims[0]:
-                print ("Unable to support N1 {} != {}".format(N1,self._header.dims[0]))
+                print("Unable to support N1 {} != {}".format(N1,self._header.dims[0]))
                 return None
             X=self._read_chunk_1d(i1+N1*i2,N1*N2)
             return np.reshape(X,(N1,N2),order='F')
         else:
             if N1 != self._header.dims[0]:
-                print ("Unable to support N1 {} != {}".format(N1,self._header.dims[0]))
+                print("Unable to support N1 {} != {}".format(N1,self._header.dims[0]))
                 return None
             if N2 != self._header.dims[1]:
-                print ("Unable to support N2 {} != {}".format(N2,self._header.dims[1]))
+                print("Unable to support N2 {} != {}".format(N2,self._header.dims[1]))
                 return None
             X=self._read_chunk_1d(i1+N1*i2+N1*N2*i3,N1*N2*N3)
             return np.reshape(X,(N1,N2,N3),order='F')
@@ -57,14 +55,17 @@ class DiskReadMda:
         try:
             f.seek(self._header.header_size+self._header.num_bytes_per_entry*i)
             ret=np.fromfile(f,dtype=self._header.dt,count=N)
+            print(ret.shape)
             f.close()
             return ret
         except Exception as e: # catch *all* exceptions
-            print (e)
+            print(e)
             f.close()
             return None
 
 class DiskWriteMda:
+    _path=''
+    _header=None
     def __init__(self,path,dims,dt='float64'):
         self._path=path
         self._header=MdaHeader(dt,dims)
@@ -92,15 +93,15 @@ class DiskWriteMda:
             return self._write_chunk_1d(X,i1)
         elif (i3<0):
             if N1 != self._header.dims[0]:
-                print ("Unable to support DiskWriteMda N1 {} != {}".format(N1,self._header.dims[0]))
+                print("Unable to support DiskWriteMda N1 {} != {}".format(N1,self._header.dims[0]))
                 return None
             return self._write_chunk_1d(X.ravel(order='F'),i1+N1*i2)
         else:
             if N1 != self._header.dims[0]:
-                print ("Unable to support DiskWriteMda N1 {} != {}".format(N1,self._header.dims[0]))
+                print("Unable to support DiskWriteMda N1 {} != {}".format(N1,self._header.dims[0]))
                 return None
             if N2 != self._header.dims[1]:
-                print ("Unable to support DiskWriteMda N2 {} != {}".format(N2,self._header.dims[1]))
+                print("Unable to support DiskWriteMda N2 {} != {}".format(N2,self._header.dims[1]))
                 return None
             return self._write_chunk_1d(X.ravel(order='F'),i1+N1*i2+N1*N2*i3)
     def _write_chunk_1d(self,X,i):
@@ -112,7 +113,7 @@ class DiskWriteMda:
             f.close()
             return True
         except Exception as e: # catch *all* exceptions
-            print (e)
+            print(e)
             f.close()
             return False
 
@@ -152,7 +153,7 @@ def _dt_code_from_dt(dt):
         return -8
     return None
 
-def get_num_bytes_per_entry_from_dt(dt):
+def _num_bytes_per_entry_from_dt(dt):
     if dt == 'uint8':
         return 1
     if dt == 'float32':
@@ -175,37 +176,27 @@ def _read_header(path):
         dt_code=_read_int32(f)
         num_bytes_per_entry=_read_int32(f)
         num_dims=_read_int32(f)
-        uses64bitdims=False
-        if (num_dims<0):
-            uses64bitdims=True
-            num_dims=-num_dims
-        if (num_dims<1) or (num_dims>6): # allow single dimension as of 12/6/17
-            print ("Invalid number of dimensions: {}".format(num_dims))
+        if (num_dims<2) or (num_dims>6):
+            print("Invalid number of dimensions: {}".format(num_dims))
             return None
         dims=[]
         dimprod=1
-        if uses64bitdims:
-            for j in range(0,num_dims):
-                tmp0=_read_int64(f)
-                dimprod=dimprod*tmp0
-                dims.append(tmp0)
-        else:
-            for j in range(0,num_dims):
-                tmp0=_read_int32(f)
-                dimprod=dimprod*tmp0
-                dims.append(tmp0)
+        for j in range(0,num_dims):
+            tmp0=_read_int32(f)
+            dimprod=dimprod*tmp0
+            dims.append(tmp0)
         dt=_dt_from_dt_code(dt_code)
         if dt is None:
-            print ("Invalid data type code: {}".format(dt_code))
+            print("Invalid data type code: {}".format(dt_code))
             return None
+        print(dt)
+        print(dims)
         H=MdaHeader(dt,dims)
-        if (uses64bitdims):
-            H.uses64bitdims=True
-            H.header_size=3*4+H.num_dims*8
+        print('test')
         f.close()
         return H
     except Exception as e: # catch *all* exceptions
-        print (e)
+        print(e)
         f.close()
         return None
 
@@ -214,25 +205,20 @@ def _write_header(path,H):
     try:
         _write_int32(f,H.dt_code)
         _write_int32(f,H.num_bytes_per_entry)
-        if H.uses64bitdims:
-            _write_int32(f,-H.num_dims)
-            for j in range(0,H.num_dims):
-                _write_int64(f,H.dims[j])
-        else:
-            _write_int32(f,H.num_dims)
-            for j in range(0,H.num_dims):
-                _write_int32(f,H.dims[j])
+        _write_int32(f,H.num_dims)
+        for j in range(0,H.num_dims):
+            _write_int32(f,H.dims[j])
         f.close()
         return True
     except Exception as e: # catch *all* exceptions
-        print (e)
+        print(e)
         f.close()
         return False
 
 def readmda(path):
     H=_read_header(path)
     if (H is None):
-        print ("Problem reading header of: {}".format(path))
+        print("Problem reading header of: {}".format(path))
         return None
     ret=np.array([])
     f=open(path,"rb")
@@ -244,12 +230,13 @@ def readmda(path):
         f.close()
         return ret
     except Exception as e: # catch *all* exceptions
-        print (e)
+        print(e)
         f.close()
         return None
 
 def writemda32(X,fname):
-    return _writemda(X,fname,'float32')
+    num_bytes_per_entry = 4
+    return _writemda(X,fname,'float32', num_bytes_per_entry)
 
 def writemda64(X,fname):
     return _writemda(X,fname,'float64')
@@ -258,37 +245,40 @@ def writemda8(X,fname):
     return _writemda(X,fname,'uint8')
 
 def writemda32i(X,fname):
-    return _writemda(X,fname,'int32')
+    num_bytes_per_entry = 4
+    return _writemda(X,fname,'int32', num_bytes_per_entry)
 
 def writemda32ui(X,fname):
     return _writemda(X,fname,'uint32')
 
 def writemda16i(X,fname):
-    return _writemda(X,fname,'int16')
+    num_bytes_per_entry = 2
+    return _writemda(X,fname,'int16', num_bytes_per_entry)
 
 def writemda16ui(X,fname):
-    return _writemda(X,fname,'uint16')
+    num_bytes_per_entry = 2
+    return _writemda(X,fname,'uint16', num_bytes_per_entry)
 
-def _writemda(X,fname,dt):
+def _writemda(X,fname,dt, num_bytes_per_entry):
     dt_code=0
-    num_bytes_per_entry=get_num_bytes_per_entry_from_dt(dt)
+    #num_bytes_per_entry=2 # changed 0 to 2 here
     dt_code=_dt_code_from_dt(dt)
     if dt_code is None:
-        print ("Unexpected data type: {}".format(dt))
+        print("Unexpected data type: {}".format(dt))
         return False
 
     f=open(fname,'wb')
     try:
-        _write_int32(f,dt_code)
-        _write_int32(f,num_bytes_per_entry)
-        _write_int32(f,X.ndim)
-        for j in range(0,X.ndim):
-            _write_int32(f,X.shape[j])
+        _write_int32(f, dt_code)
+        _write_int32(f, num_bytes_per_entry)
+        _write_int32(f, X.ndim)
+        for j in range(0, X.ndim):
+            _write_int32(f, X.shape[j])
         #This is how I do column-major order
-        A=np.reshape(X,X.size,order='F').astype(dt)
+        A = np.reshape(X, X.size, order='F').astype(dt)
         A.tofile(f)
     except Exception as e: # catch *all* exceptions
-        print (e)
+        print(e)
     finally:
         f.close()
         return True
@@ -296,14 +286,8 @@ def _writemda(X,fname,dt):
 def _read_int32(f):
     return struct.unpack('<i',f.read(4))[0]
 
-def _read_int64(f):
-    return struct.unpack('<q',f.read(8))[0]
-
 def _write_int32(f,val):
     f.write(struct.pack('<i',val))
-
-def _write_int64(f,val):
-    f.write(struct.pack('<q',val))
 
 def mdaio_test():
     M=4
@@ -314,13 +298,15 @@ def mdaio_test():
             X[m,n]=n*10+m
     writemda32(X,'tmp1.mda')
     Y=readmda('tmp1.mda')
-    print (Y)
-    print (np.absolute(X-Y).max())
+    print(Y)
+    print(np.absolute(X-Y).max())
     Z=DiskReadMda('tmp1.mda')
-    print (Z.readChunk(i1=0,i2=4,N1=M,N2=N-4))
+    print(Z.readChunk(i1=0,i2=4,N1=M,N2=N-4))
 
     A=DiskWriteMda('tmpA.mda',(M,N))
     A.writeChunk(Y,i1=0,i2=0)
     B=readmda('tmpA.mda')
-    print (B.shape)
-    print (B)
+    print(B.shape)
+    print(B)
+
+mdaio_test()

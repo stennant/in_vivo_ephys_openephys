@@ -15,6 +15,7 @@ class Parameters:
     filepath = ''
     filename = ''
     continuous_file_name = ''
+    continuous_file_name_end = ''
     date = ''
     file = ''
     behaviour_path = ''
@@ -87,6 +88,12 @@ class Parameters:
 
     def set_continuous_file_name(self, cont_name):
         Parameters.continuous_file_name = cont_name
+
+    def get_continuous_file_name_end(self):
+            return self.continuous_file_name_end
+
+    def set_continuous_file_name_end(self, cont_name):
+        Parameters.continuous_file_name_end = cont_name
 
     def get_behaviour_path(self):
         return self.behaviour_path

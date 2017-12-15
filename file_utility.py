@@ -42,25 +42,9 @@ def create_behaviour_folder_structure(prm):
         os.makedirs(analysis_path)
 
 
-def create_ephys_folder_structure(prm):
+def folders_for_separate_tetrodes(prm):
     ephys_path = prm.get_filepath() + 'Electrophysiology'
-    prm.set_ephys_path(ephys_path)
-
     spike_path = ephys_path + '\\Spike_sorting'
-    prm.set_spike_path(spike_path)
-
-    sorting_t1_path_continuous = spike_path + '\\t1_' + prm.get_date() + '_continuous'
-    sorting_t2_path_continuous = spike_path + '\\t2_' + prm.get_date() + '_continuous'
-    sorting_t3_path_continuous = spike_path + '\\t3_' + prm.get_date() + '_continuous'
-    sorting_t4_path_continuous = spike_path + '\\t4_' + prm.get_date() + '_continuous'
-
-    mountain_data_folder_t1 = spike_path + '\\t1_' + prm.get_date() + '_continuous\\data'
-    mountain_data_folder_t2 = spike_path + '\\t2_' + prm.get_date() + '_continuous\\data'
-    mountain_data_folder_t3 = spike_path + '\\t3_' + prm.get_date() + '_continuous\\data'
-    mountain_data_folder_t4 = spike_path + '\\t4_' + prm.get_date() + '_continuous\\data'
-
-    # mountain_data = spike_path + '\\all_tetrodes'
-    # mountain_data_data = mountain_data + '\\data'
 
     analysis_path = ephys_path + '\\Analysis'
     prm.set_ephys_analysis_path(analysis_path)
@@ -68,9 +52,24 @@ def create_ephys_folder_structure(prm):
     data_path = ephys_path + '\\Data'
     prm.set_ephys_data_path(data_path)
 
+    sorting_t1_path_continuous = spike_path + '\\t1'
+    sorting_t2_path_continuous = spike_path + '\\t2'
+    sorting_t3_path_continuous = spike_path + '\\t3'
+    sorting_t4_path_continuous = spike_path + '\\t4'
+
+    mountain_data_folder_t1 = spike_path + '\\t1\\data'
+    mountain_data_folder_t2 = spike_path + '\\t2\\data'
+    mountain_data_folder_t3 = spike_path + '\\t3\\data'
+    mountain_data_folder_t4 = spike_path + '\\t4\\data'
+
     if os.path.exists(ephys_path) is False:
         os.makedirs(ephys_path)
         os.makedirs(spike_path)
+        os.makedirs(analysis_path)
+        os.makedirs(data_path)
+
+
+    if os.path.exists(sorting_t1_path_continuous) is False:
         os.makedirs(sorting_t1_path_continuous)
         os.makedirs(sorting_t2_path_continuous)
         os.makedirs(sorting_t3_path_continuous)
@@ -81,11 +80,31 @@ def create_ephys_folder_structure(prm):
         os.makedirs(mountain_data_folder_t3)
         os.makedirs(mountain_data_folder_t4)
 
+
+def create_ephys_folder_structure(prm):
+    ephys_path = prm.get_filepath() + 'Electrophysiology'
+    prm.set_ephys_path(ephys_path)
+
+    spike_path = ephys_path + '\\Spike_sorting'
+    prm.set_spike_path(spike_path)
+    mountain_data = spike_path + '\\all_tetrodes'
+    mountain_data_data = mountain_data + '\\data'
+
+    analysis_path = ephys_path + '\\Analysis'
+    prm.set_ephys_analysis_path(analysis_path)
+
+    data_path = ephys_path + '\\Data'
+    prm.set_ephys_data_path(data_path)
+
+    if os.path.exists(ephys_path) is False:
+        os.makedirs(ephys_path)
+        os.makedirs(spike_path)
         os.makedirs(analysis_path)
         os.makedirs(data_path)
 
-        # os.makedirs(mountain_data)
-        # os.makedirs(mountain_data_data)
+    if os.path.exists(mountain_data) is False:
+        os.makedirs(mountain_data)
+        os.makedirs(mountain_data_data)
 
 
 def create_folder_structure(prm):
