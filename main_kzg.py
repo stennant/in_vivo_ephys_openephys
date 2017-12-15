@@ -28,10 +28,10 @@ def init_vr_params():
 def init_open_field_params():
     prm.set_movement_ch('100_ADC2.continuous')
     prm.set_opto_ch('100_ADC3.continuous')
-    # prm.set_continuous_file_name('105_CH')
-    prm.set_continuous_file_name('100_CH')
-    # prm.set_continuous_file_name_end('_0')
-    prm.set_continuous_file_name_end('')
+    prm.set_continuous_file_name('105_CH')
+    # prm.set_continuous_file_name('100_CH')
+    prm.set_continuous_file_name_end('_0')
+    # prm.set_continuous_file_name_end('')
     prm.set_waveform_size(40)
 
 '''
@@ -50,8 +50,8 @@ Initializes parameters
 def init_params():
     # prm.set_filepath('C:\\Users\\s1466507\\Documents\\mountain_sort_tmp\\open_field_test\\recordings\\')
     # prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Klara\\open_field_setup\\sync_test\\recordings\\')
-    # prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Tizzy\\Cohort3\\TestProject\\recordings\\')
-    prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Sarah\\Test_for_Klara\\recordings\\')
+    prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Tizzy\\Cohort3\\TestProject\\recordings\\')
+    # prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Sarah\\Test_for_Klara\\recordings\\')
     # prm.set_filepath('D:\\sort\\mountainsort_test\\open_field_test\\recordings\\')
 
     prm.set_sampling_rate(30000)

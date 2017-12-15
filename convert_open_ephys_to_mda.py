@@ -32,7 +32,7 @@ def convert_continuous_to_mda(prm):
 
         for ch in range(4):
             channels_tetrode[ch, :] = channel_data_all[ch]
-        mdaio.writemda16i(channels_tetrode, spike_data_path + 't' + str(tetrode + 1) + '_' + prm.get_date() + '_continuous\\data\\raw.mda')
+        mdaio.writemda16i(channels_tetrode, spike_data_path + 't' + str(tetrode + 1) + '\\data\\raw.mda')
 
 
 # this is for putting all tetrodes in the same mda file

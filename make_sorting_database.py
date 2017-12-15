@@ -19,7 +19,7 @@ def write_bash_script_for_sorting(prm):
         batch_writer = open(main_path_win + '\\run_sorting.sh', 'a', newline='\n')
 
     for tetrode in range(4):
-        data_folder_name_continuous = 't' + str(tetrode + 1) + '_' + name_of_dataset + '_continuous'
+        data_folder_name_continuous = 't' + str(tetrode + 1)
 
         mountain_main_path = 'recordings/' + name_of_dataset + '/Electrophysiology/Spike_sorting/' + data_folder_name_continuous
         mountain_main_data_path = 'recordings/' + name_of_dataset + '/Electrophysiology/Spike_sorting/' + data_folder_name_continuous + '/data'
@@ -87,8 +87,8 @@ def create_sorting_folder_structure_separate_tetrodes(prm):
     spike_path = prm.get_spike_path()
 
     for tetrode in range(4):
-        data_folder_name = 't' + str(tetrode + 1) + '_' + name_of_dataset
-        current_folder_continuous = spike_path + '\\' + data_folder_name + '_continuous'
+        data_folder_name = 't' + str(tetrode + 1)
+        current_folder_continuous = spike_path + '\\' + data_folder_name
 
         if os.path.exists(current_folder_continuous) is False:
             os.makedirs(current_folder_continuous)
