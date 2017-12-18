@@ -1,4 +1,5 @@
 import convert_open_ephys_to_mda
+import dead_channels
 import glob
 import make_sorting_database
 import os
@@ -28,10 +29,10 @@ def init_vr_params():
 def init_open_field_params():
     prm.set_movement_ch('100_ADC2.continuous')
     prm.set_opto_ch('100_ADC3.continuous')
-    prm.set_continuous_file_name('105_CH')
-    # prm.set_continuous_file_name('100_CH')
-    prm.set_continuous_file_name_end('_0')
-    # prm.set_continuous_file_name_end('')
+    # prm.set_continuous_file_name('105_CH')
+    prm.set_continuous_file_name('100_CH')
+    # prm.set_continuous_file_name_end('_0')
+    prm.set_continuous_file_name_end('')
     prm.set_waveform_size(40)
 
 '''
@@ -48,8 +49,8 @@ Initializes parameters
 
 
 def init_params():
-    # prm.set_filepath('C:\\Users\\s1466507\\Documents\\mountain_sort_tmp\\open_field_test\\recordings\\')
-    prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Klara\\open_field_setup\\rat_test\\recordings\\')
+    prm.set_filepath('C:\\Users\\s1466507\\Documents\\mountain_sort_tmp\\open_field_test\\recordings\\')
+    # prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Klara\\open_field_setup\\sync_test\\recordings\\')
     # prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Tizzy\\Cohort3\\TestProject\\recordings\\')
     # prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Sarah\\Test_for_Klara\\recordings\\')
     # prm.set_filepath('D:\\sort\\mountainsort_test\\open_field_test\\recordings\\')
@@ -68,6 +69,10 @@ def init_params():
     if prm.is_open_field is True:
         init_open_field_params()
 
+    # These are not exclusive, both can be True for the same recording - that way it'll be sorted twice
+    prm.set_is_tetrode_by_tetrode(True)  # set to True if you want the spike sorting to be done tetrode by tetrode
+    prm.set_is_all_tetrodes_together(False)  # set to True if you want the spike sorting done on all tetrodes combined
+
 
 def process_a_dir(dir_name):
     print('All folders in {} will be processed.'.format(dir_name))
@@ -75,10 +80,12 @@ def process_a_dir(dir_name):
     prm.set_filepath(dir_name)
     # make_sorting_database.create_sorting_environment(prm)
 
-    # convert_open_ephys_to_mda.convert_all_tetrodes_to_mda(prm)
+    dead_channels = dead_channels.get_dead_channel_ids(prm)
+    if prm.get_is_all_tetrodes_together() is True:
+        convert_open_ephys_to_mda.convert_all_tetrodes_to_mda(prm)
 
-    convert_open_ephys_to_mda.convert_continuous_to_mda(prm)
-    # convert_open_ephys_to_mda.convert_spk_to_mda(prm)
+    if prm.get_is_tetrode_by_tetrode() is True:
+        convert_open_ephys_to_mda.convert_continuous_to_mda(prm)
 
     if prm.is_vr is True:
         vr_process_movement.save_or_open_movement_arrays(prm)

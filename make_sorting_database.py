@@ -131,7 +131,7 @@ def create_sorting_folder_structure(prm):
         copyfile(main_path + '\\sorting_files\\mountainsort3.mlp', current_folder + '\\mountainsort3.mlp')
 
         copyfile(main_path + '\\sorting_files\\params.json', current_folder + '\\data\\params.json')
-        copyfile(main_path + '\\sorting_files\\geom.csv', current_folder + '\\data\\geom.csv')
+        copyfile(main_path + '\\sorting_files\\geom_all_tetrodes.csv', current_folder + '\\data\\geom.csv')
     except FileNotFoundError:
         print('Something is wrong with the sorting_files folder. '
               'It should be in the same folder as the dataset, '

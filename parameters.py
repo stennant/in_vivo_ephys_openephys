@@ -11,6 +11,8 @@ class Parameters:
 
     is_vr = False
     is_open_field = False
+    analyze_tetrode_by_tetrode = True
+    analyze_all_tetrodes_together = False
 
     filepath = ''
     filename = ''
@@ -64,6 +66,19 @@ class Parameters:
 
     def set_is_open_field(self, is_open_field):
         Parameters.is_open_field = is_open_field
+
+    def get_is_tetrode_by_tetrode(self):
+        return Parameters.analyze_tetrode_by_tetrode
+
+    def set_is_tetrode_by_tetrode(self, is_tetrode_by_tetrode):
+        Parameters.analyze_tetrode_by_tetrode = is_tetrode_by_tetrode
+
+    def get_is_all_tetrodes_together(self):
+        return Parameters.analyze_all_tetrodes_together
+
+    def set_is_all_tetrodes_together(self, all_tetrodes_together):
+        Parameters.analyze_all_tetrodes_together = all_tetrodes_together
+
 
     def get_date(self):
         return Parameters.date
