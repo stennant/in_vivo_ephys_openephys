@@ -29,15 +29,23 @@ def write_bash_script_for_sorting(prm):
         pipeline_path = mountain_main_path + '/mountainsort3.mlp'
         geom_path = mountain_main_data_path + '/geom.csv'
         firings_out_path = mountain_main_data_path + '/firings.mda'
+        firings_out_curated_path = mountain_main_data_path + '/firings_curated.mda'
         pre_out_path = mountain_main_data_path + '/pre.mda'
         filt_out_path = mountain_main_data_path + '/filt.mda'
         params_path = mountain_main_path + '/params.json'
+        metrics_path = mountain_main_path + '/cluster_metrics.json'
 
         batch_writer.write('echo "I am calling mountainsort now for tetrode {0}, {1}."\n'.format(tetrode + 1, name_of_dataset))
 
         sort_command = 'mlp-run ' + pipeline_path + ' sort' + ' --raw=' + mda_path + ' --geom=' + geom_path + ' --firings_out=' + firings_out_path + ' --pre_out=' + pre_out_path + ' --filt_out=' + filt_out_path + ' --_params=' + params_path
 
         batch_writer.write(sort_command + '\n')
+
+        sort_command_curate = 'mlp-run ' + pipeline_path + ' sort' + ' --raw=' + mda_path + ' --geom=' + geom_path + ' --firings_out=' + firings_out_curated_path + ' --_params=' + params_path + ' --curate=true' + ' --cluster_metrics_out=' + metrics_path
+
+        batch_writer.write('echo "Now with curation."\n')
+
+        batch_writer.write(sort_command_curate + '\n')
 
 
 def write_bash_script_for_sorting_all_tetrodes(prm):
@@ -67,13 +75,10 @@ def write_bash_script_for_sorting_all_tetrodes(prm):
     pipeline_path = mountain_main_path + '/mountainsort3.mlp'
     geom_path = mountain_main_data_path + '/geom.csv'
     firings_out_path = mountain_main_data_path + '/firings.mda'
+    firings_out_curated_path = mountain_main_data_path + '/firings_curated.mda'
     pre_out_path = mountain_main_data_path + '/pre.mda'
     filt_out_path = mountain_main_data_path + '/filt.mda'
-    ###########################################################################################################
-    firings_original_path = mountain_main_data_path + '/firings_original.mda'
-    metrics_1_path = mountain_main_data_path + '/metrics1.mda'
-    metrics_2_path = mountain_main_data_path + '/metrics2.mda'
-    metric_path = mountain_main_data_path + '/metrics2.mda'
+    metrics_path = mountain_main_path + '/cluster_metrics.json'
 
     params_path = mountain_main_path + '/params.json'
 
@@ -82,6 +87,12 @@ def write_bash_script_for_sorting_all_tetrodes(prm):
     sort_command = 'mlp-run ' + pipeline_path + ' sort' + ' --raw=' + mda_path + ' --geom=' + geom_path + ' --firings_out=' + firings_out_path + ' --pre_out=' + pre_out_path + ' --filt_out=' + filt_out_path + ' --_params=' + params_path
 
     batch_writer.write(sort_command + '\n')
+
+    sort_command_curate = 'mlp-run ' + pipeline_path + ' sort' + ' --raw=' + mda_path + ' --geom=' + geom_path + ' --firings_out=' + firings_out_curated_path + ' --_params=' + params_path + ' --curate=true' + ' --cluster_metrics_out=' + metrics_path
+
+    batch_writer.write('echo "Now with curation."\n')
+
+    batch_writer.write(sort_command_curate + '\n')
 
 
 def create_sorting_folder_structure_separate_tetrodes(prm):

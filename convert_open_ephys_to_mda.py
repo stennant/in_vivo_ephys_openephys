@@ -8,6 +8,7 @@ import mdaio
 import make_sorting_database
 import numpy as np
 import open_ephys_IO
+import os
 
 
 def convert_continuous_to_mda(prm):
@@ -21,18 +22,21 @@ def convert_continuous_to_mda(prm):
     continuous_file_name_end = prm.get_continuous_file_name_end()
 
     for tetrode in range(number_of_tetrodes):
-        channel_data_all = []
-        for channel in range(4):
-            file_path = folder_path + continuous_file_name + str(tetrode*4 + channel + 1) + continuous_file_name_end + '.continuous'
-            channel_data = open_ephys_IO.get_data_continuous(prm, file_path)
-            channel_data_all.append(channel_data)
+        if os.path.isfile(spike_data_path + 't' + str(tetrode + 1) + '\\data\\raw.mda') is False:
+            channel_data_all = []
+            for channel in range(4):
+                file_path = folder_path + continuous_file_name + str(tetrode*4 + channel + 1) + continuous_file_name_end + '.continuous'
+                channel_data = open_ephys_IO.get_data_continuous(prm, file_path)
+                channel_data_all.append(channel_data)
 
-        recording_length = len(channel_data_all[0])
-        channels_tetrode = np.zeros((4, recording_length))
+            recording_length = len(channel_data_all[0])
+            channels_tetrode = np.zeros((4, recording_length))
 
-        for ch in range(4):
-            channels_tetrode[ch, :] = channel_data_all[ch]
-        mdaio.writemda16i(channels_tetrode, spike_data_path + 't' + str(tetrode + 1) + '\\data\\raw.mda')
+            for ch in range(4):
+                channels_tetrode[ch, :] = channel_data_all[ch]
+            mdaio.writemda16i(channels_tetrode, spike_data_path + 't' + str(tetrode + 1) + '\\data\\raw.mda')
+        else:
+            print('This tetrode is already converted to mda, I will move on and check the next one. ' + spike_data_path + 't' + str(tetrode + 1) + '\\data\\raw.mda')
 
 
 # this is for putting all tetrodes in the same mda file

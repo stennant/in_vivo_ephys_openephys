@@ -9,9 +9,7 @@ def get_dead_channel_ids(prm):
         dead_channel_reader = open(dead_ch_path, 'r')
         dead_channels = dead_channel_reader.readlines()
         dead_channels = [x.strip() for x in dead_channels]
-        return dead_channels
+        #todo: put dead channels in parameters, and skip them when sorting
 
     else:
         print('There are no dead channels in this recording.')
-
-
