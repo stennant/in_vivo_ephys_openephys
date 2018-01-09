@@ -80,7 +80,7 @@ def process_a_dir(dir_name):
     prm.set_filepath(dir_name)
     # make_sorting_database.create_sorting_environment(prm)
 
-    dead_channels.get_dead_channel_ids(prm)
+    dead_channels.get_dead_channel_ids(prm)  # read dead_channels.txt
 
     if prm.get_is_all_tetrodes_together() is True:
         convert_open_ephys_to_mda.convert_all_tetrodes_to_mda(prm)

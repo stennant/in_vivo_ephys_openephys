@@ -1,4 +1,5 @@
 import os
+import dead_channels
 from shutil import copyfile
 
 
@@ -104,6 +105,7 @@ def create_sorting_folder_structure_separate_tetrodes(prm):
     spike_path = prm.get_spike_path()
 
     for tetrode in range(4):
+        dead_channels.remove_dead_channels_from_geom_file_tetrode_by_tetrode(prm)
         data_folder_name = 't' + str(tetrode + 1)
         current_folder_continuous = spike_path + '\\' + data_folder_name
 
