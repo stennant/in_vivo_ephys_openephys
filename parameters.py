@@ -14,6 +14,8 @@ class Parameters:
     analyze_tetrode_by_tetrode = True
     analyze_all_tetrodes_together = False
 
+    dead_channels = []
+
     filepath = ''
     filename = ''
     continuous_file_name = ''
@@ -78,6 +80,12 @@ class Parameters:
 
     def set_is_all_tetrodes_together(self, all_tetrodes_together):
         Parameters.analyze_all_tetrodes_together = all_tetrodes_together
+
+    def get_dead_channels(self):
+        return Parameters.dead_channels
+
+    def set_dead_channels(d_ch):
+        Parameters.dead_channels = d_ch
 
 
     def get_date(self):
