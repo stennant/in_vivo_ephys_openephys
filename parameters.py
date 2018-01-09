@@ -84,8 +84,12 @@ class Parameters:
     def get_dead_channels(self):
         return Parameters.dead_channels
 
-    def set_dead_channels(d_ch):
-        Parameters.dead_channels = d_ch
+    def set_dead_channels(d_ch = [], *args):
+        dead_ch = []
+        for dead_chan in args:
+            dead_ch.append(dead_chan)
+
+        Parameters.dead_channels = dead_ch
 
 
     def get_date(self):
