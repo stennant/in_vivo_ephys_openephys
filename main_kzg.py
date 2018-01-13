@@ -49,8 +49,10 @@ Initializes parameters
 
 
 def init_params():
-    prm.set_filepath('C:\\Users\\s1466507\\Documents\\mountain_sort_tmp\\open_field_test\\recordings\\')
-    # prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Klara\\open_field_setup\\sync_test\\recordings\\')
+    # prm.set_filepath('C:\\Users\\s1466507\\Documents\\mountain_sort_tmp\\open_field_test\\recordings\\')
+    #prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Klara\\open_field_setup\\sync_test\\recordings\\')
+    prm.set_filepath('smb:\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Klara\\open_field_setup\\sync_test\\recordings\\')
+
     # prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Tizzy\\Cohort3\\TestProject\\recordings\\')
     # prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Sarah\\Test_for_Klara\\recordings\\')
     # prm.set_filepath('D:\\sort\\mountain_test\\open_field_test\\recordings\\')
