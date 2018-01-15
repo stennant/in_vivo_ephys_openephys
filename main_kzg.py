@@ -72,7 +72,7 @@ def init_params():
         init_open_field_params()
 
     # These are not exclusive, both can be True for the same recording - that way it'll be sorted twice
-    prm.set_is_tetrode_by_tetrode(False)  # set to True if you want the spike sorting to be done tetrode by tetrode
+    prm.set_is_tetrode_by_tetrode(True)  # set to True if you want the spike sorting to be done tetrode by tetrode
     prm.set_is_all_tetrodes_together(True)  # set to True if you want the spike sorting done on all tetrodes combined
 
 

@@ -54,7 +54,7 @@ def remove_dead_channels_from_geom_file_all_tetrodes(prm):
             del coordinates_x[channel]
             del coordinates_y[channel]
 
-        with open(main_path + '\\sorting_files\\geom.csv', 'w', newline='') as csvfile:
+        with open(main_path + '\\sorting_files\\geom_all_tetrodes.csv', 'w', newline='') as csvfile:
             for channel in coordinates_x:
                 fieldnames = ['x_coord', 'y_coord']
                 writer = csv.DictWriter(csvfile, fieldnames=fieldnames)

@@ -74,7 +74,7 @@ def write_bash_script_for_sorting_all_tetrodes(prm):
     mda_path = mountain_main_data_path + '/raw.mda'
 
     pipeline_path = mountain_main_path + '/mountainsort3.mlp'
-    geom_path = mountain_main_data_path + '/geom.csv'
+    geom_path = mountain_main_data_path + '/geom_all_tetrodes.csv'
     firings_out_path = mountain_main_data_path + '/firings.mda'
     firings_out_curated_path = mountain_main_data_path + '/firings_curated.mda'
     pre_out_path = mountain_main_data_path + '/pre.mda'
@@ -127,6 +127,7 @@ def create_sorting_folder_structure_separate_tetrodes(prm):
 
 
 def create_sorting_folder_structure(prm):
+    dead_channels.remove_dead_channels_from_geom_file_all_tetrodes(prm)
     file_path = prm.get_filepath()
     name_of_dataset = prm.get_date()
     main_folder_name = file_path.rsplit('\\', 3)[-3]
