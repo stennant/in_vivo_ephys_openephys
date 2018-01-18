@@ -72,16 +72,17 @@ def process_a_dir(dir_name):
         prm.set_date(dir_name.rsplit('/', 2)[-2])
 
     prm.set_filepath(dir_name)
-    make_sorting_database.create_sorting_environment(prm)
+
 
     dead_channels.get_dead_channel_ids(prm)  # read dead_channels.txt
 
     if prm.get_is_all_tetrodes_together() is True:
-        convert_open_ephys_to_mda.convert_all_tetrodes_to_mda(prm)  # todo: fix file path
+        make_sorting_database.create_sorting_folder_structure(prm)  # todo: fix file path
+        convert_open_ephys_to_mda.convert_all_tetrodes_to_mda(prm)
 
     if prm.get_is_tetrode_by_tetrode() is True:
-        convert_open_ephys_to_mda.convert_continuous_to_mda(prm)  # todo: fix file path
-
+        make_sorting_database.create_sorting_folder_structure_separate_tetrodes(prm)  # todo: fix file path
+        convert_open_ephys_to_mda.convert_continuous_to_mda(prm)
     if prm.is_vr is True:
         vr_process_movement.save_or_open_movement_arrays(prm)  # todo: fix file path
 

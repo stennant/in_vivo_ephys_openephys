@@ -1,5 +1,6 @@
 import os
 import dead_channels
+import file_utility
 from shutil import copyfile
 
 
@@ -128,24 +129,31 @@ def create_sorting_folder_structure_separate_tetrodes(prm):
 
 def create_sorting_folder_structure(prm):
     dead_channels.remove_dead_channels_from_geom_file_all_tetrodes(prm)
-    file_path = prm.get_filepath()
-    name_of_dataset = prm.get_date()
-    main_folder_name = file_path.rsplit('\\', 3)[-3]
-    main_path = file_path.rsplit('\\', 3)[-4]
+    main_path = file_utility.get_main_path(prm)
 
     spike_path = prm.get_spike_path()
+    current_folder = ''
+    data_path = ''
+    sorting_folder = ''
 
-    current_folder = spike_path + '\\all_tetrodes'
+    if prm.is_windows():
+        current_folder = spike_path + '\\all_tetrodes\\'
+        sorting_folder = '\\sorting_files\\'
+        data_path = 'data\\'
+    if prm.is_ubuntu():
+        current_folder = spike_path + '/all_tetrodes/'
+        sorting_folder = '/sorting_files/'
+        data_path = 'data/'
 
     if os.path.exists(current_folder) is False:
         os.makedirs(current_folder)
     try:
-        copyfile(main_path + '\\sorting_files\\params.json', current_folder + '\\params.json')
-        copyfile(main_path + '\\sorting_files\\params.json', current_folder + '\\params.json')
-        copyfile(main_path + '\\sorting_files\\mountainsort3.mlp', current_folder + '\\mountainsort3.mlp')
+        copyfile(main_path + sorting_folder + 'params.json', current_folder + 'params.json')
+        copyfile(main_path + sorting_folder + 'params.json', current_folder + 'params.json')
+        copyfile(main_path + sorting_folder + 'mountainsort3.mlp', current_folder + 'mountainsort3.mlp')
 
-        copyfile(main_path + '\\sorting_files\\params.json', current_folder + '\\data\\params.json')
-        copyfile(main_path + '\\sorting_files\\geom_all_tetrodes.csv', current_folder + '\\data\\geom.csv')
+        copyfile(main_path + sorting_folder + 'params.json', current_folder + data_path + 'params.json')
+        copyfile(main_path + sorting_folder + 'geom_all_tetrodes.csv', current_folder + data_path + 'geom.csv')
     except FileNotFoundError:
         print('Something is wrong with the sorting_files folder. '
               'It should be in the same folder as the dataset, '

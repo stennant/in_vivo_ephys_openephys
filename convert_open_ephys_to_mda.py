@@ -27,7 +27,6 @@ def convert_continuous_to_mda(prm):
 
     raw_mda_file_path = file_utility.get_raw_mda_path_all_channels(prm)
 
-
     for tetrode in range(number_of_tetrodes):
         live_channels = dead_channels.get_list_of_live_channels(prm, tetrode)
         number_of_live_ch_in_tetrode = 0
