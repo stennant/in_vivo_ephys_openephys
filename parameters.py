@@ -9,6 +9,9 @@ prm.get_filepath()
 
 class Parameters:
 
+    is_windows = False
+    is_ubuntu = True
+
     is_vr = False
     is_open_field = False
     analyze_tetrode_by_tetrode = True
@@ -18,6 +21,7 @@ class Parameters:
 
     filepath = ''
     filename = ''
+    dead_channel_path = ''
     continuous_file_name = ''
     continuous_file_name_end = ''
     date = ''
@@ -56,6 +60,18 @@ class Parameters:
 
     def __init__(self):
         return
+
+    def get_is_ubuntu(self):
+        return Parameters.is_ubuntu
+
+    def set_is_ubuntu(self, is_ub):
+        Parameters.is_ubuntu = is_ub
+
+    def get_is_windows(self):
+        return Parameters.is_windows
+
+    def set_is_windows(self, is_win):
+        Parameters.is_windows = is_win
 
     def get_is_vr(self):
         return Parameters.is_vr
@@ -103,6 +119,13 @@ class Parameters:
 
     def set_filepath(self, fp):
         Parameters.filepath = fp
+
+    def get_dead_channel_path(self):
+        return Parameters.dead_channel_path
+
+    def set_dead_channel_path(self, dead_ch):
+        Parameters.dead_channel_path = dead_ch
+
 
     def get_filename(self):
         return self.filename

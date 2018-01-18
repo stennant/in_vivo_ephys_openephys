@@ -1,7 +1,6 @@
 import convert_open_ephys_to_mda
 import dead_channels
 import glob
-import make_sorting_database
 import os
 import parameters
 import vr_process_movement
@@ -35,35 +34,23 @@ def init_open_field_params():
     prm.set_continuous_file_name_end('')
     prm.set_waveform_size(40)
 
-'''
-Initializes parameters
-    filepath : string, location of raw data file
-    filename : string, name of raw data file (without raw.kwd extension)
-    good_channels : int, list, channels that are not dead
-    stop_threshold : float, given in cm/200ms.
-        example:
-        0.7cm/200ms = 0.7(1/200cm)/ms = 0.7(1000/200cm/s) = 0.7(5cm/s) = 0.7/5 cm/s
-    num_channels : int, number of recording channels
-    movement_ch : channel number for movement information
-'''
-
 
 def init_params():
-    prm.set_filepath('C:\\Users\\s1466507\\Documents\\mountain_sort_tmp\\open_field_test\\recordings\\')
+    # prm.set_filepath('C:\\Users\\s1466507\\Documents\\mountain_sort_tmp\\open_field_test\\recordings\\')
     # prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Klara\\open_field_setup\\sync_test\\recordings\\')
-    # prm.set_filepath('smb:\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Klara\\open_field_setup\\sync_test\\recordings\\')
+    prm.set_filepath('/run/user/1001/gvfs/smb-share:server=cmvm.datastore.ed.ac.uk,share=cmvm/sbms/groups/mnolan_NolanLab/ActiveProjects/Klara/open_field_setup/sync_test/recordings/')
 
     # prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Tizzy\\Cohort3\\TestProject\\recordings\\')
     # prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Sarah\\Test_for_Klara\\recordings\\')
     # prm.set_filepath('D:\\sort\\mountain_test\\open_field_test\\recordings\\')
 
     prm.set_sampling_rate(30000)
-
-    # f prm.set_filename('TT3.spikes')
-    prm.set_file(prm.get_filepath(), prm.get_filename())
     prm.set_num_tetrodes(4)
 
     prm.set_is_open_field(True)
+
+    prm.set_is_ubuntu(True)
+    prm.set_is_windows(False)
 
     if prm.is_vr is True:
         init_vr_params()
@@ -78,20 +65,23 @@ def init_params():
 
 def process_a_dir(dir_name):
     print('All folders in {} will be processed.'.format(dir_name))
-    prm.set_date(dir_name.rsplit('\\', 2)[-2])
-    prm.set_filepath(dir_name)
-    # make_sorting_database.create_sorting_environment(prm)
+    if prm.get_is_windows():
+        prm.set_date(dir_name.rsplit('\\', 2)[-2])
+    if prm.get_is_ubuntu():
+        prm.set_date(dir_name.rsplit('/', 2)[-2])
 
-    dead_channels.get_dead_channel_ids(prm)  # read dead_channels.txt
+    prm.set_filepath(dir_name)
+
+    dead_channels.get_dead_channel_ids(prm)  # read dead_channels.txt todo: fix file path
 
     if prm.get_is_all_tetrodes_together() is True:
-        convert_open_ephys_to_mda.convert_all_tetrodes_to_mda(prm)
+        convert_open_ephys_to_mda.convert_all_tetrodes_to_mda(prm)  # todo: fix file path
 
     if prm.get_is_tetrode_by_tetrode() is True:
-        convert_open_ephys_to_mda.convert_continuous_to_mda(prm)
+        convert_open_ephys_to_mda.convert_continuous_to_mda(prm)  # todo: fix file path
 
     if prm.is_vr is True:
-        vr_process_movement.save_or_open_movement_arrays(prm)
+        vr_process_movement.save_or_open_movement_arrays(prm)  # todo: fix file path
 
     # process_optogenetics.process_opto(prm)
 
@@ -99,7 +89,11 @@ def process_a_dir(dir_name):
 def process_files():
     for name in glob.glob(prm.get_filepath()+'*'):
         os.path.isdir(name)
-        process_a_dir(name + '\\')
+        if prm.get_is_windows():
+            process_a_dir(name + '\\')
+        if prm.get_is_ubuntu():
+            process_a_dir(name + '/')
+
 
 
 def main():

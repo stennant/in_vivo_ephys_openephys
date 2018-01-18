@@ -25,6 +25,19 @@ def find_the_file(file_path, pattern, type):
     return file_name, file_found
 
 
+def set_dead_channel_path(prm):
+    file_path = prm.get_filepath()
+    dead_ch_path = file_path + "\\dead_channels.txt"
+
+    if prm.get_is_windows:
+        dead_ch_path = file_path + "\\dead_channels.txt"
+        prm.set_dead_channels_path(dead_ch_path)
+
+    if prm.get_is_ubuntu:
+        dead_ch_path = file_path + "/dead_channels.txt"
+        prm.set_dead_channels_path(dead_ch_path)
+
+
 def create_behaviour_folder_structure(prm):
     movement_path = prm.get_filepath() + 'Behaviour'
     prm.set_behaviour_path(movement_path)
@@ -40,6 +53,17 @@ def create_behaviour_folder_structure(prm):
         os.makedirs(movement_path)
         os.makedirs(data_path)
         os.makedirs(analysis_path)
+
+
+# main path is the folder that contains 'recordings' and 'sorting_files'
+def get_main_path(prm):
+    file_path = prm.get_filepath()
+    if prm.is_windows():
+        main_path = file_path.rsplit('\\', 3)[-4]
+    if prm.is_ubuntu():
+        main_path = file_path.rsplit('/', 3)[-4]
+    return main_path
+
 
 
 def folders_for_separate_tetrodes(prm):

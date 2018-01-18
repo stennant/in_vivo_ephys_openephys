@@ -1,9 +1,11 @@
 import os
 import csv
+import file_utility
+
 
 def get_dead_channel_ids(prm):
-    file_path = prm.get_filepath()
-    dead_ch_path = file_path + "\\dead_channels.txt"
+    file_utility.set_dead_channel_path(prm)
+    dead_ch_path = prm.get_dead_channel_path()
 
     if os.path.isfile(dead_ch_path) is True:
         dead_channel_reader = open(dead_ch_path, 'r')
@@ -16,9 +18,14 @@ def get_dead_channel_ids(prm):
 
 
 def remove_dead_channels_from_geom_file_tetrode_by_tetrode(prm, tetrode):
-    file_path = prm.get_filepath()
-    main_path = file_path.rsplit('\\', 3)[-4]
-    dead_ch_path = file_path + "\\dead_channels.txt"
+    main_path = file_utility.get_main_path(prm)
+    dead_ch_path = prm.get_dead_channel_path()
+    geom_path = ''
+
+    if prm.is_windows:
+        geom_path = '\\sorting_files\\geom.csv'
+    if prm.is_ubuntu:
+        geom_path = '/sorting_files/geom.csv'
 
     tetrode_channels = [1, 2, 3, 4]
 
@@ -30,7 +37,7 @@ def remove_dead_channels_from_geom_file_tetrode_by_tetrode(prm, tetrode):
                 ch_number = channel_id % 4
                 tetrode_channels.remove(ch_number)
 
-        with open(main_path + '\\sorting_files\\geom.csv', 'w', newline='') as csvfile:
+        with open(main_path + geom_path, 'w', newline='') as csvfile:
             for channel in tetrode_channels:
                 fieldnames = ['channel_id', 'distance']
                 writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -41,9 +48,13 @@ def remove_dead_channels_from_geom_file_tetrode_by_tetrode(prm, tetrode):
 
 
 def remove_dead_channels_from_geom_file_all_tetrodes(prm):
-    file_path = prm.get_filepath()
-    main_path = file_path.rsplit('\\', 3)[-4]
-    dead_ch_path = file_path + "\\dead_channels.txt"
+    main_path = file_utility.get_main_path(prm)
+    dead_ch_path = prm.get_dead_channel_path()
+
+    if prm.is_windows:
+        geom_path = '\\sorting_files\\geom_all_tetrodes.csv'
+    if prm.is_ubuntu:
+        geom_path = '/sorting_files/geom_all_tetrodes.csv'
 
     coordinates_x = [0, 25, 25, 0, 200, 225, 225, 200, 400, 425, 425, 400, 600, 625, 625, 600]
     coordinates_y = [0, 0, 25, 25, 200, 200, 225, 225, 400, 400, 425, 425, 600, 600, 625, 625]
@@ -54,7 +65,7 @@ def remove_dead_channels_from_geom_file_all_tetrodes(prm):
             del coordinates_x[channel]
             del coordinates_y[channel]
 
-        with open(main_path + '\\sorting_files\\geom_all_tetrodes.csv', 'w', newline='') as csvfile:
+        with open(main_path + geom_path, 'w', newline='') as csvfile:
             for channel in range(len(coordinates_x)):
                 fieldnames = ['x_coord', 'y_coord']
                 writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -66,9 +77,8 @@ def remove_dead_channels_from_geom_file_all_tetrodes(prm):
 
 def get_list_of_live_channels(prm, tetrode):
     tetrode_channels = [1, 2, 3, 4]
-    file_path = prm.get_filepath()
 
-    dead_ch_path = file_path + "\\dead_channels.txt"
+    dead_ch_path = prm.get_dead_channel_path()
     if os.path.isfile(dead_ch_path) is True:
         dead_channels = prm.get_dead_channels()
         for channel in range(len(dead_channels[0])):
@@ -81,8 +91,7 @@ def get_list_of_live_channels(prm, tetrode):
 
 def get_list_of_live_channels_all_tetrodes(prm):
     channels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-    file_path = prm.get_filepath()
-    dead_ch_path = file_path + "\\dead_channels.txt"
+    dead_ch_path = prm.get_dead_channel_path()
 
     if os.path.isfile(dead_ch_path) is True:
         dead_channels = prm.get_dead_channels()
