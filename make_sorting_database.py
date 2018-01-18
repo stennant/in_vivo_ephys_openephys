@@ -8,17 +8,20 @@ def write_bash_script_for_sorting(prm):
     # /run/user/1000/gvfs/smb-share:server=cmvm.datastore.ed.ac.uk,share=cmvm/sbms/groups/mnolan_NolanLab/ActiveProjects/Klara/open_field_setup/test_recordings/sorting_test
     name_of_dataset = prm.get_date()
     file_path_win = prm.get_filepath()
-    main_path_win = file_path_win.rsplit('\\', 3)[-4]
-    main_path = main_path_win.split('\\', 3)[3]
 
-    if os.path.isfile(main_path_win + "\\run_sorting.sh") is False:
-        batch_writer = open(main_path_win + '\\run_sorting.sh', 'w', newline='\n')
+    if prm.is_windows():
+        main_path_win = file_path_win.rsplit('\\', 3)[-4] + '\\'
+    if prm.is_ubuntu():
+        main_path_win = file_path_win.rsplit('/', 3)[-4] + '/'
+
+    if os.path.isfile(main_path_win + "run_sorting.sh") is False:
+        batch_writer = open(main_path_win + 'run_sorting.sh', 'w', newline='\n')
         batch_writer.write('#!/bin/bash\n')
         batch_writer.write('echo "-----------------------------------------------------------------------------------"\n')
         batch_writer.write('echo "This is a shell script that will hopefully run mountain sort on all recordings in the folder."\n')
 
     else:
-        batch_writer = open(main_path_win + '\\run_sorting.sh', 'a', newline='\n')
+        batch_writer = open(main_path_win + 'run_sorting.sh', 'a', newline='\n')
 
     for tetrode in range(4):
         data_folder_name_continuous = 't' + str(tetrode + 1)
@@ -54,17 +57,20 @@ def write_bash_script_for_sorting_all_tetrodes(prm):
     # /run/user/1000/gvfs/smb-share:server=cmvm.datastore.ed.ac.uk,share=cmvm/sbms/groups/mnolan_NolanLab/ActiveProjects/Klara/open_field_setup/test_recordings/sorting_test
     name_of_dataset = prm.get_date()
     file_path_win = prm.get_filepath()
-    main_path_win = file_path_win.rsplit('\\', 3)[-4]
-    main_path = main_path_win.split('\\', 3)[3]
+    if prm.is_windows():
+        main_path_win = file_path_win.rsplit('\\', 3)[-4] + '\\'
+    if prm.is_ubuntu():
+        main_path_win = file_path_win.rsplit('/', 3)[-4] + '/'
 
-    if os.path.isfile(main_path_win + "\\run_sorting.sh") is False:
-        batch_writer = open(main_path_win + '\\run_sorting.sh', 'w', newline='\n')
+
+    if os.path.isfile(main_path_win + "run_sorting.sh") is False:
+        batch_writer = open(main_path_win + 'run_sorting.sh', 'w', newline='\n')
         batch_writer.write('#!/bin/bash\n')
         batch_writer.write('echo "-----------------------------------------------------------------------------------"\n')
         batch_writer.write('echo "This is a shell script that will hopefully run mountain sort on all recordings in the folder."\n')
 
     else:
-        batch_writer = open(main_path_win + '\\run_sorting.sh', 'a', newline='\n')
+        batch_writer = open(main_path_win + 'run_sorting.sh', 'a', newline='\n')
 
 
     data_folder_name_all_ch = 'all_tetrodes'
@@ -100,7 +106,6 @@ def write_bash_script_for_sorting_all_tetrodes(prm):
 def create_sorting_folder_structure_separate_tetrodes(prm):
     main_path = file_utility.get_main_path(prm)
     spike_path = prm.get_spike_path()
-
 
     for tetrode in range(4):
         dead_channels.remove_dead_channels_from_geom_file_tetrode_by_tetrode(prm, tetrode)
