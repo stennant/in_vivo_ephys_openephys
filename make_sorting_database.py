@@ -98,27 +98,32 @@ def write_bash_script_for_sorting_all_tetrodes(prm):
 
 
 def create_sorting_folder_structure_separate_tetrodes(prm):
-    file_path = prm.get_filepath()
-    name_of_dataset = prm.get_date()
-    main_folder_name = file_path.rsplit('\\', 3)[-3]
-    main_path = file_path.rsplit('\\', 3)[-4]
-
+    main_path = file_utility.get_main_path(prm)
     spike_path = prm.get_spike_path()
+
 
     for tetrode in range(4):
         dead_channels.remove_dead_channels_from_geom_file_tetrode_by_tetrode(prm, tetrode)
         data_folder_name = 't' + str(tetrode + 1)
-        current_folder_continuous = spike_path + '\\' + data_folder_name
+
+        if prm.is_windows():
+            current_folder_continuous = spike_path + '\\' + data_folder_name + '\\'
+            sorting_folder = '\\sorting_files\\'
+            data_path = 'data\\'
+        if prm.is_ubuntu():
+            current_folder_continuous = spike_path + '/' + data_folder_name + '/'
+            sorting_folder = '/sorting_files/'
+            data_path = 'data/'
 
         if os.path.exists(current_folder_continuous) is False:
             os.makedirs(current_folder_continuous)
         try:
-            copyfile(main_path + '\\sorting_files\\params.json', current_folder_continuous + '\\params.json')
-            copyfile(main_path + '\\sorting_files\\params.json', current_folder_continuous + '\\params.json')
-            copyfile(main_path + '\\sorting_files\\mountainsort3.mlp', current_folder_continuous + '\\mountainsort3.mlp')
+            copyfile(main_path + sorting_folder + 'params.json', current_folder_continuous + 'params.json')
+            copyfile(main_path + sorting_folder + 'params.json', current_folder_continuous + 'params.json')
+            copyfile(main_path + sorting_folder + 'mountainsort3.mlp', current_folder_continuous + 'mountainsort3.mlp')
 
-            copyfile(main_path + '\\sorting_files\\params.json', current_folder_continuous + '\\data\\params.json')
-            copyfile(main_path + '\\sorting_files\\geom.csv', current_folder_continuous + '\\data\\geom.csv')
+            copyfile(main_path + sorting_folder + 'params.json', current_folder_continuous + data_path + 'params.json')
+            copyfile(main_path + sorting_folder + 'geom.csv', current_folder_continuous + data_path + 'geom.csv')
         except FileNotFoundError:
             print('Something is wrong with the sorting_files folder. '
                   'It should be in the same folder as the dataset, '
