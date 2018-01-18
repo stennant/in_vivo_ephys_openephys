@@ -1,5 +1,6 @@
 import convert_open_ephys_to_mda
 import dead_channels
+import file_utility
 import glob
 import make_sorting_database
 import os
@@ -73,8 +74,8 @@ def process_a_dir(dir_name):
 
     prm.set_filepath(dir_name)
 
-
     dead_channels.get_dead_channel_ids(prm)  # read dead_channels.txt
+    file_utility.create_folder_structure(prm)
 
     if prm.get_is_all_tetrodes_together() is True:
         make_sorting_database.create_sorting_folder_structure(prm)  # todo: fix file path

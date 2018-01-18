@@ -58,9 +58,9 @@ def write_bash_script_for_sorting_all_tetrodes(prm):
     # /run/user/1000/gvfs/smb-share:server=cmvm.datastore.ed.ac.uk,share=cmvm/sbms/groups/mnolan_NolanLab/ActiveProjects/Klara/open_field_setup/test_recordings/sorting_test
     name_of_dataset = prm.get_date()
     file_path_win = prm.get_filepath()
-    if prm.is_windows():
+    if prm.get_is_windows():
         main_path_win = file_path_win.rsplit('\\', 3)[-4] + '\\'
-    if prm.is_ubuntu():
+    if prm.get_is_ubuntu():
         main_path_win = file_path_win.rsplit('/', 3)[-4] + '/'
 
 
@@ -147,11 +147,11 @@ def create_sorting_folder_structure(prm):
     data_path = ''
     sorting_folder = ''
 
-    if prm.is_windows():
+    if prm.get_is_windows():
         current_folder = spike_path + '\\all_tetrodes\\'
         sorting_folder = '\\sorting_files\\'
         data_path = 'data\\'
-    if prm.is_ubuntu():
+    if prm.get_is_ubuntu():
         current_folder = spike_path + '/all_tetrodes/'
         sorting_folder = '/sorting_files/'
         data_path = 'data/'

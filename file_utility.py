@@ -31,11 +31,11 @@ def set_dead_channel_path(prm):
 
     if prm.get_is_windows:
         dead_ch_path = file_path + "\\dead_channels.txt"
-        prm.set_dead_channels_path(dead_ch_path)
+        prm.set_dead_channel_path(dead_ch_path)
 
     if prm.get_is_ubuntu:
         dead_ch_path = file_path + "/dead_channels.txt"
-        prm.set_dead_channels_path(dead_ch_path)
+        prm.set_dead_channel_path(dead_ch_path)
 
 
 def create_behaviour_folder_structure(prm):
@@ -58,9 +58,9 @@ def create_behaviour_folder_structure(prm):
 # main path is the folder that contains 'recordings' and 'sorting_files'
 def get_main_path(prm):
     file_path = prm.get_filepath()
-    if prm.is_windows():
+    if prm.get_is_windows():
         main_path = file_path.rsplit('\\', 3)[-4]
-    if prm.is_ubuntu():
+    if prm.get_is_ubuntu():
         main_path = file_path.rsplit('/', 3)[-4]
     return main_path
 
