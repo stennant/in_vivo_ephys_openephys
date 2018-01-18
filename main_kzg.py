@@ -1,6 +1,7 @@
 import convert_open_ephys_to_mda
 import dead_channels
 import glob
+import make_sorting_database
 import os
 import parameters
 import vr_process_movement
@@ -71,8 +72,9 @@ def process_a_dir(dir_name):
         prm.set_date(dir_name.rsplit('/', 2)[-2])
 
     prm.set_filepath(dir_name)
+    make_sorting_database.create_sorting_environment(prm)
 
-    dead_channels.get_dead_channel_ids(prm)  # read dead_channels.txt todo: fix file path
+    dead_channels.get_dead_channel_ids(prm)  # read dead_channels.txt
 
     if prm.get_is_all_tetrodes_together() is True:
         convert_open_ephys_to_mda.convert_all_tetrodes_to_mda(prm)  # todo: fix file path

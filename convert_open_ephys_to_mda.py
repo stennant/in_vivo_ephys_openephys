@@ -18,14 +18,21 @@ def convert_continuous_to_mda(prm):
     make_sorting_database.create_sorting_folder_structure_separate_tetrodes(prm)
     number_of_tetrodes = prm.get_num_tetrodes()
     folder_path = prm.get_filepath()
-    spike_data_path = prm.get_spike_path() + '\\'
+    if prm.get_is_windows():
+        spike_data_path = prm.get_spike_path() + '\\'
+    if prm.get_is_ubuntu():
+        spike_data_path = prm.get_spike_path() + '/'
     continuous_file_name = prm.get_continuous_file_name()
     continuous_file_name_end = prm.get_continuous_file_name_end()
+
+    raw_mda_file_path = file_utility.get_raw_mda_path_all_channels(prm)
+
+
 
     for tetrode in range(number_of_tetrodes):
         live_channels = dead_channels.get_list_of_live_channels(prm, tetrode)
         number_of_live_ch_in_tetrode = 0
-        if os.path.isfile(spike_data_path + 't' + str(tetrode + 1) + '\\data\\raw.mda') is False:
+        if os.path.isfile(spike_data_path + 't' + str(tetrode + 1) + raw_mda_file_path) is False:
             channel_data_all = []
             for channel in range(4):
                 if (channel + 1) in live_channels:
@@ -46,17 +53,16 @@ def convert_continuous_to_mda(prm):
 
 # this is for putting all tetrodes in the same mda file
 def convert_all_tetrodes_to_mda(prm):
-    spike_data_path = prm.get_spike_path() + '\\'
-    if os.path.isfile(spike_data_path + 'all_tetrodes\\data\\raw.mda') is False:
+    spike_data_path = prm.get_spike_path()
+    raw_mda_path = file_utility.get_raw_mda_path_all_channels(prm)
+    if os.path.isfile(spike_data_path + raw_mda_path) is False:
         file_utility.create_folder_structure(prm)
         make_sorting_database.create_sorting_folder_structure(prm)
-        number_of_tetrodes = prm.get_num_tetrodes()
         folder_path = prm.get_filepath()
-        spike_data_path = prm.get_spike_path() + '\\'
         continuous_file_name = prm.get_continuous_file_name()
         continuous_file_name_end = prm.get_continuous_file_name_end()
 
-        path = spike_data_path + 'all_tetrodes\\data\\raw.mda'
+        path = spike_data_path + raw_mda_path
 
         file_path = folder_path + continuous_file_name + str(1) + continuous_file_name_end + '.continuous'
         first_ch = open_ephys_IO.get_data_continuous(prm, file_path)
@@ -66,7 +72,6 @@ def convert_all_tetrodes_to_mda(prm):
 
         recording_length = len(first_ch)
         channels_all = np.zeros((number_of_live_channels, recording_length))
-        # channels_all[0, :] = first_ch
 
         for channel in range(number_of_live_channels):
             if (channel + 1) in live_channels:

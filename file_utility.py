@@ -65,6 +65,21 @@ def get_main_path(prm):
     return main_path
 
 
+def get_raw_mda_path_all_channels(prm):
+    if prm.get_is_windows():
+        raw_mda_path = '\\all_tetrodes\\data\\raw.mda'
+    if prm.get_is_ubuntu():
+        raw_mda_path = '/all_tetrodes/data/raw.mda'
+    return raw_mda_path
+
+
+def get_raw_mda_path_separate_tetrodes(prm):
+    if prm.get_is_windows():
+        raw_mda_path = '\\data\\raw.mda'
+    if prm.get_is_ubuntu():
+        raw_mda_path = '/data/raw.mda'
+    return raw_mda_path
+
 
 def folders_for_separate_tetrodes(prm):
     ephys_path = prm.get_filepath() + 'Electrophysiology'
