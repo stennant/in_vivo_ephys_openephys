@@ -8,6 +8,7 @@ def write_bash_script_for_sorting(prm):
     # /run/user/1000/gvfs/smb-share:server=cmvm.datastore.ed.ac.uk,share=cmvm/sbms/groups/mnolan_NolanLab/ActiveProjects/Klara/open_field_setup/test_recordings/sorting_test
     name_of_dataset = prm.get_date()
     file_path_win = prm.get_filepath()
+    main_path_win = ''
 
     if prm.is_windows():
         main_path_win = file_path_win.rsplit('\\', 3)[-4] + '\\'
