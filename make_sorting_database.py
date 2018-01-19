@@ -10,9 +10,9 @@ def write_bash_script_for_sorting(prm):
     file_path_win = prm.get_filepath()
     main_path_win = ''
 
-    if prm.is_windows():
+    if prm.get_is_windows():
         main_path_win = file_path_win.rsplit('\\', 3)[-4] + '\\'
-    if prm.is_ubuntu():
+    if prm.get_is_ubuntu():
         main_path_win = file_path_win.rsplit('/', 3)[-4] + '/'
 
     if os.path.isfile(main_path_win + "run_sorting.sh") is False:
@@ -63,7 +63,6 @@ def write_bash_script_for_sorting_all_tetrodes(prm):
     if prm.get_is_ubuntu():
         main_path_win = file_path_win.rsplit('/', 3)[-4] + '/'
 
-
     if os.path.isfile(main_path_win + "run_sorting.sh") is False:
         batch_writer = open(main_path_win + 'run_sorting.sh', 'w', newline='\n')
         batch_writer.write('#!/bin/bash\n')
@@ -105,6 +104,7 @@ def write_bash_script_for_sorting_all_tetrodes(prm):
 
 
 def create_sorting_folder_structure_separate_tetrodes(prm):
+    file_utility.folders_for_separate_tetrodes(prm)
     main_path = file_utility.get_main_path(prm)
     spike_path = prm.get_spike_path()
 
@@ -112,11 +112,11 @@ def create_sorting_folder_structure_separate_tetrodes(prm):
         dead_channels.remove_dead_channels_from_geom_file_tetrode_by_tetrode(prm, tetrode)
         data_folder_name = 't' + str(tetrode + 1)
 
-        if prm.is_windows():
+        if prm.get_is_windows():
             current_folder_continuous = spike_path + '\\' + data_folder_name + '\\'
             sorting_folder = '\\sorting_files\\'
             data_path = 'data\\'
-        if prm.is_ubuntu():
+        if prm.get_is_ubuntu():
             current_folder_continuous = spike_path + '/' + data_folder_name + '/'
             sorting_folder = '/sorting_files/'
             data_path = 'data/'
@@ -124,7 +124,6 @@ def create_sorting_folder_structure_separate_tetrodes(prm):
         if os.path.exists(current_folder_continuous) is False:
             os.makedirs(current_folder_continuous)
         try:
-            copyfile(main_path + sorting_folder + 'params.json', current_folder_continuous + 'params.json')
             copyfile(main_path + sorting_folder + 'params.json', current_folder_continuous + 'params.json')
             copyfile(main_path + sorting_folder + 'mountainsort3.mlp', current_folder_continuous + 'mountainsort3.mlp')
 
@@ -139,6 +138,7 @@ def create_sorting_folder_structure_separate_tetrodes(prm):
 
 
 def create_sorting_folder_structure(prm):
+    file_utility.create_ephys_folder_structure(prm)
     dead_channels.remove_dead_channels_from_geom_file_all_tetrodes(prm)
     main_path = file_utility.get_main_path(prm)
 
@@ -159,7 +159,6 @@ def create_sorting_folder_structure(prm):
     if os.path.exists(current_folder) is False:
         os.makedirs(current_folder)
     try:
-        copyfile(main_path + sorting_folder + 'params.json', current_folder + 'params.json')
         copyfile(main_path + sorting_folder + 'params.json', current_folder + 'params.json')
         copyfile(main_path + sorting_folder + 'mountainsort3.mlp', current_folder + 'mountainsort3.mlp')
 

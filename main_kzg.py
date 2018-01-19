@@ -66,6 +66,15 @@ def init_params():
 
 
 def process_a_dir(dir_name):
+    print('')
+    print('')
+    print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
+          '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
+    print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
+          '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
+    print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
+          '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
+    print('')
     print('All folders in {} will be processed.'.format(dir_name))
     if prm.get_is_windows():
         prm.set_date(dir_name.rsplit('\\', 2)[-2])
@@ -77,15 +86,26 @@ def process_a_dir(dir_name):
     dead_channels.get_dead_channel_ids(prm)  # read dead_channels.txt
     file_utility.create_folder_structure(prm)
 
-    if prm.get_is_all_tetrodes_together() is True:
-        make_sorting_database.create_sorting_folder_structure(prm)  # todo: fix file path
-        convert_open_ephys_to_mda.convert_all_tetrodes_to_mda(prm)
-
     if prm.get_is_tetrode_by_tetrode() is True:
-        make_sorting_database.create_sorting_folder_structure_separate_tetrodes(prm)  # todo: fix file path
+        print('------------------------------------------')
+        print('I am making one mda file for each tetrode.')
+        print('------------------------------------------')
+        make_sorting_database.create_sorting_folder_structure_separate_tetrodes(prm)
         convert_open_ephys_to_mda.convert_continuous_to_mda(prm)
+        print('All 4 tetrodes were converted to separate mda files.')
+        print('*****************************************************')
+
+    if prm.get_is_all_tetrodes_together() is True:
+        print('-------------------------------------------------------------------------')
+        print('I am converting all channels into one mda file. This will take some time.')
+        print('-------------------------------------------------------------------------')
+        make_sorting_database.create_sorting_folder_structure(prm)
+        convert_open_ephys_to_mda.convert_all_tetrodes_to_mda(prm)
+        print('The big mda file is created, it is in Electrophysiology/Spike_sorting/all_tetrodes/data')
+        print('***************************************************************************************')
+
     if prm.is_vr is True:
-        vr_process_movement.save_or_open_movement_arrays(prm)  # todo: fix file path
+        vr_process_movement.save_or_open_movement_arrays(prm)
 
     # process_optogenetics.process_opto(prm)
 
@@ -97,7 +117,6 @@ def process_files():
             process_a_dir(name + '\\')
         if prm.get_is_ubuntu():
             process_a_dir(name + '/')
-
 
 
 def main():

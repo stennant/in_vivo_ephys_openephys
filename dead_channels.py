@@ -35,6 +35,8 @@ def remove_dead_channels_from_geom_file_tetrode_by_tetrode(prm, tetrode):
             channel_id = int(dead_channels[0][channel])
             if (tetrode*4 + 1) <= channel_id <= (tetrode*4 + 4):
                 ch_number = channel_id % 4
+                if ch_number == 0:
+                    ch_number = 4
                 tetrode_channels.remove(ch_number)
 
         with open(main_path + geom_path, 'w', newline='') as csvfile:
@@ -62,8 +64,17 @@ def remove_dead_channels_from_geom_file_all_tetrodes(prm):
     if os.path.isfile(dead_ch_path) is True:
         dead_channels = prm.get_dead_channels()
         for channel in range(len(dead_channels[0])):
-            del coordinates_x[channel]
-            del coordinates_y[channel]
+            dead_channel_index = int(dead_channels[0][channel]) - 1
+            temporary_value_to_replace = 6666
+            coordinates_x[dead_channel_index] = temporary_value_to_replace
+            coordinates_y[dead_channel_index] = temporary_value_to_replace
+
+        coordinates_x.remove(temporary_value_to_replace)
+        coordinates_y.remove(temporary_value_to_replace)
+
+
+
+
 
         with open(main_path + geom_path, 'w', newline='') as csvfile:
             for channel in range(len(coordinates_x)):
@@ -85,6 +96,8 @@ def get_list_of_live_channels(prm, tetrode):
             channel_id = int(dead_channels[0][channel])
             if (tetrode*4 + 1) <= channel_id <= (tetrode*4 + 4):
                 ch_number = channel_id % 4
+                if ch_number == 0:
+                    ch_number = 4
                 tetrode_channels.remove(ch_number)
     return tetrode_channels
 

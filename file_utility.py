@@ -117,7 +117,6 @@ def folders_for_separate_tetrodes(prm):
         mountain_data_folder_t3 = spike_path + '/t3/data'
         mountain_data_folder_t4 = spike_path + '/t4/data'
 
-
     prm.set_ephys_analysis_path(analysis_path)
     prm.set_ephys_data_path(data_path)
 

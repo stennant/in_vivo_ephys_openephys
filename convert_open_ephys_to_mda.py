@@ -25,26 +25,29 @@ def convert_continuous_to_mda(prm):
     continuous_file_name = prm.get_continuous_file_name()
     continuous_file_name_end = prm.get_continuous_file_name_end()
 
-    raw_mda_file_path = file_utility.get_raw_mda_path_all_channels(prm)
+    raw_mda_file_path = file_utility.get_raw_mda_path_separate_tetrodes(prm)
 
     for tetrode in range(number_of_tetrodes):
         live_channels = dead_channels.get_list_of_live_channels(prm, tetrode)
         number_of_live_ch_in_tetrode = 0
         if os.path.isfile(spike_data_path + 't' + str(tetrode + 1) + raw_mda_file_path) is False:
             channel_data_all = []
-            for channel in range(4):
-                if (channel + 1) in live_channels:
-                    number_of_live_ch_in_tetrode += 1
-                    file_path = folder_path + continuous_file_name + str(tetrode*4 + channel + 1) + continuous_file_name_end + '.continuous'
-                    channel_data = open_ephys_IO.get_data_continuous(prm, file_path)
-                    channel_data_all.append(channel_data)
+            if len(live_channels) >= 3:
+                for channel in range(4):
+                    if (channel + 1) in live_channels:
+                        number_of_live_ch_in_tetrode += 1
+                        file_path = folder_path + continuous_file_name + str(tetrode*4 + channel + 1) + continuous_file_name_end + '.continuous'
+                        channel_data = open_ephys_IO.get_data_continuous(prm, file_path)
+                        channel_data_all.append(channel_data)
 
-            recording_length = len(channel_data_all[0])
-            channels_tetrode = np.zeros((number_of_live_ch_in_tetrode, recording_length))
+                recording_length = len(channel_data_all[live_channels[0]])
+                channels_tetrode = np.zeros((number_of_live_ch_in_tetrode, recording_length))
+                for ch in range(number_of_live_ch_in_tetrode):
+                    channels_tetrode[ch, :] = channel_data_all[ch]
+                mdaio.writemda16i(channels_tetrode, spike_data_path + 't' + str(tetrode + 1) + raw_mda_file_path)
+            else:
+                print('The number of live channels is fewer than 3 in this tetrode so I will not sort it.')
 
-            for ch in range(number_of_live_ch_in_tetrode):
-                channels_tetrode[ch, :] = channel_data_all[ch]
-            mdaio.writemda16i(channels_tetrode, spike_data_path + 't' + str(tetrode + 1) + raw_mda_file_path)
         else:
             print('This tetrode is already converted to mda, I will move on and check the next one. ' + spike_data_path + 't' + str(tetrode + 1) + '\\data\\raw.mda')
 
@@ -78,6 +81,9 @@ def convert_all_tetrodes_to_mda(prm):
                 channels_all[channel, :] = channel_data
 
         mdaio.writemda16i(channels_all, path)
+    else:
+        print('The mda file that contains all channels is already in Electrophysiology/Spike_sorting/all_tetrodes/data.'
+              ' You  need to delete it if you want me to make it again.')
 
 
 
