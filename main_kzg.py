@@ -40,7 +40,9 @@ def init_open_field_params():
 def init_params():
     # prm.set_filepath('C:\\Users\\s1466507\\Documents\\mountain_sort_tmp\\open_field_test\\recordings\\')
     # prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Klara\\open_field_setup\\sync_test\\recordings\\')
-    prm.set_filepath('/run/user/1001/gvfs/smb-share:server=cmvm.datastore.ed.ac.uk,share=cmvm/sbms/groups/mnolan_NolanLab/ActiveProjects/Klara/open_field_setup/sync_test/recordings/')
+    # prm.set_filepath('/run/user/1001/gvfs/smb-share:server=cmvm.datastore.ed.ac.uk,share=cmvm/sbms/groups/mnolan_NolanLab/ActiveProjects/Klara/open_field_setup/sync_test/recordings/')
+    # rat test data
+    prm.set_filepath('/run/user/1001/gvfs/smb-share:server=cmvm.datastore.ed.ac.uk,share=cmvm/sbms/groups/mnolan_NolanLab/ActiveProjects/Klara/open_field_setup/rat_test/recordings/')
 
     # prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Tizzy\\Cohort3\\TestProject\\recordings\\')
     # prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Sarah\\Test_for_Klara\\recordings\\')
@@ -128,6 +130,7 @@ def main():
 
     init_params()
     process_files()
+
 
 if __name__ == '__main__':
     main()
