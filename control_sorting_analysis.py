@@ -34,6 +34,9 @@ def monitor_to_sort():
         to_sort = check_folder()
 
         if to_sort is True:
+            # read param file and check session type and location on server for checksum
+            # look at checksum and only proceed if it's okay, otherwise wait
+
             pre_process_ephys_data.main()
             print('I finished pre-processing the first recording. I will call MountainSort now.')
             os.chmod('/home/nolanlab/to_sort/run_sorting.sh', 484)

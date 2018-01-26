@@ -36,7 +36,18 @@ def init_open_field_params():
 
 
 def init_params():
-    prm.set_filepath('/home/nolanlab/to_sort/recordings')
+    # prm.set_filepath('C:\\Users\\s1466507\\Documents\\mountain_sort_tmp\\open_field_test\\recordings\\')
+    # prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Klara\\open_field_setup\\sync_test\\recordings\\')
+    # prm.set_filepath('/run/user/1001/gvfs/smb-share:server=cmvm.datastore.ed.ac.uk,share=cmvm/sbms/groups/mnolan_NolanLab/ActiveProjects/Klara/open_field_setup/sync_test/recordings/')
+
+    # rat test data
+    # prm.set_filepath('/run/user/1001/gvfs/smb-share:server=cmvm.datastore.ed.ac.uk,share=cmvm/sbms/groups/mnolan_NolanLab/ActiveProjects/Klara/open_field_setup/rat_test/recordings/')
+    prm.set_filepath('/home/nolanlab/rat_test/recordings')
+    prm.set_filepath('/home/nolanlab/sync_test/recordings')
+
+    # prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Tizzy\\Cohort3\\TestProject\\recordings\\')
+    # prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Sarah\\Test_for_Klara\\recordings\\')
+    # prm.set_filepath('D:\\sort\\mountain_test\\open_field_test\\recordings\\')
 
     prm.set_sampling_rate(30000)
     prm.set_num_tetrodes(4)
