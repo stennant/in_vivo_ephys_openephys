@@ -81,7 +81,7 @@ def write_bash_script_for_sorting_all_tetrodes(prm):
     mda_path = mountain_main_data_path + '/raw.mda'
 
     pipeline_path = mountain_main_path + '/mountainsort3.mlp'
-    geom_path = mountain_main_data_path + '/geom_all_tetrodes.csv'
+    geom_path = mountain_main_data_path + '/geom.csv'
     firings_out_path = mountain_main_data_path + '/firings.mda'
     firings_out_curated_path = mountain_main_data_path + '/firings_curated.mda'
     pre_out_path = mountain_main_data_path + '/pre.mda'

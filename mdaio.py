@@ -56,10 +56,12 @@ class DiskReadMda:
             f.seek(self._header.header_size+self._header.num_bytes_per_entry*i)
             ret=np.fromfile(f,dtype=self._header.dt,count=N)
             print(ret.shape)
+            f.flush()
             f.close()
             return ret
         except Exception as e: # catch *all* exceptions
             print(e)
+            f.flush()
             f.close()
             return None
 
@@ -227,6 +229,7 @@ def readmda(path):
         #This is how I do the column-major order
         ret=np.fromfile(f,dtype=H.dt,count=H.dimprod)
         ret=np.reshape(ret,H.dims,order='F')
+        f.flush()
         f.close()
         return ret
     except Exception as e: # catch *all* exceptions
@@ -280,6 +283,7 @@ def _writemda(X,fname,dt, num_bytes_per_entry):
     except Exception as e: # catch *all* exceptions
         print(e)
     finally:
+        f.flush()
         f.close()
         return True
 
