@@ -313,4 +313,3 @@ def mdaio_test():
     print(B.shape)
     print(B)
 
-mdaio_test()

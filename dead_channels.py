@@ -39,14 +39,12 @@ def remove_dead_channels_from_geom_file_tetrode_by_tetrode(prm, tetrode):
                     ch_number = 4
                 tetrode_channels.remove(ch_number)
 
-        with open(main_path + geom_path, 'w', newline='') as csvfile:
-            for channel in tetrode_channels:
-                fieldnames = ['channel_id', 'distance']
-                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    with open(main_path + geom_path, 'w', newline='') as csvfile:
+        for channel in tetrode_channels:
+            fieldnames = ['channel_id', 'distance']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
-                writer.writerow({'channel_id': channel, 'distance': 0})
-    else:
-        return
+            writer.writerow({'channel_id': channel, 'distance': 0})
 
 
 def remove_dead_channels_from_geom_file_all_tetrodes(prm):
@@ -71,10 +69,6 @@ def remove_dead_channels_from_geom_file_all_tetrodes(prm):
 
         coordinates_x.remove(temporary_value_to_replace)
         coordinates_y.remove(temporary_value_to_replace)
-
-
-
-
 
         with open(main_path + geom_path, 'w', newline='') as csvfile:
             for channel in range(len(coordinates_x)):

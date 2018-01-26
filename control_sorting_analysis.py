@@ -6,19 +6,22 @@
 # update progress.txt
 # call matlab script - this will remove the file
 
-from os.path import isfile, join
-from os import listdir
+import os
+import subprocess
 import time
 
 import pre_process_ephys_data
 
 
 def check_folder():
-    sorting_path = '/home/nolanlab/to_sort/recordings'
-    if any(isfile(join(sorting_path, i)) for i in listdir(sorting_path)):
-        to_sort = True
-    else:
-        to_sort = False
+    sorting_path = '/home/nolanlab/to_sort/recordings/'
+    for dir, sub_dirs, files in os.walk(sorting_path):
+        if not files:
+            to_sort = False
+        else:
+            to_sort = True
+            print('I found something, and I will try to sort it now.')
+            return to_sort
     return to_sort
 
 
@@ -32,6 +35,12 @@ def monitor_to_sort():
 
         if to_sort is True:
             pre_process_ephys_data.main()
+            print('I finished pre-processing the first recording. I will call MountainSort now.')
+            os.chmod('/home/nolanlab/to_sort/run_sorting.sh', 484)
+
+            subprocess.call('/home/nolanlab/to_sort/run_sorting.sh', shell=True)
+
+            print('MS is done')
 
             # call run_sorting
             # call matlab
@@ -41,3 +50,13 @@ def monitor_to_sort():
             time.sleep(time_to_wait - ((time.time() - start_time) % time_to_wait))
 
 
+def main():
+    print('-------------------------------------------------------------')
+    print('This is a script that controls running the spike sorting analysis.')
+    print('-------------------------------------------------------------')
+
+    monitor_to_sort()
+
+
+if __name__ == '__main__':
+    main()
