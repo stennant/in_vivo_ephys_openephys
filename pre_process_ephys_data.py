@@ -124,9 +124,17 @@ def process_files():
         for name in glob.glob(prm.get_filepath() + '/*'):
             os.path.isdir(name)
             process_a_dir(name + '/')
-            break  # this is here so it only does the first file for now
 
 
+def pre_process_data(dir_name):
+    print('-------------------------------------------------------------')
+    print('-------------------------------------------------------------')
+
+    init_params()
+    process_a_dir(dir_name + '/')
+
+
+# call main when you only want to run this through a folder with recordings without the rest of the pipeline
 def main():
     print('-------------------------------------------------------------')
     print('-------------------------------------------------------------')
