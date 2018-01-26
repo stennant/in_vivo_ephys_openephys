@@ -30,10 +30,8 @@ def init_vr_params():
 def init_open_field_params():
     prm.set_movement_ch('100_ADC2.continuous')
     prm.set_opto_ch('100_ADC3.continuous')
-    prm.set_continuous_file_name('105_CH')
-    # prm.set_continuous_file_name('100_CH')
-    prm.set_continuous_file_name_end('_0')
-    # prm.set_continuous_file_name_end('')
+    # file_utility.init_data_file_names(prm, '105_CH', '_0')  # old files
+    # file_utility.init_data_file_names(prm, '100_CH', '')  # currently used (2018)
     prm.set_waveform_size(40)
 
 
@@ -41,9 +39,11 @@ def init_params():
     # prm.set_filepath('C:\\Users\\s1466507\\Documents\\mountain_sort_tmp\\open_field_test\\recordings\\')
     # prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Klara\\open_field_setup\\sync_test\\recordings\\')
     # prm.set_filepath('/run/user/1001/gvfs/smb-share:server=cmvm.datastore.ed.ac.uk,share=cmvm/sbms/groups/mnolan_NolanLab/ActiveProjects/Klara/open_field_setup/sync_test/recordings/')
+
     # rat test data
     # prm.set_filepath('/run/user/1001/gvfs/smb-share:server=cmvm.datastore.ed.ac.uk,share=cmvm/sbms/groups/mnolan_NolanLab/ActiveProjects/Klara/open_field_setup/rat_test/recordings/')
     prm.set_filepath('/home/nolanlab/rat_test/recordings')
+    prm.set_filepath('/home/nolanlab/sync_test/recordings')
 
     # prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Tizzy\\Cohort3\\TestProject\\recordings\\')
     # prm.set_filepath('\\\\cmvm.datastore.ed.ac.uk\\cmvm\\sbms\\groups\\mnolan_NolanLab\\ActiveProjects\\Sarah\\Test_for_Klara\\recordings\\')
@@ -85,6 +85,7 @@ def process_a_dir(dir_name):
         prm.set_date(dir_name.rsplit('/', 2)[-2])
 
     prm.set_filepath(dir_name)
+    file_utility.set_continuous_data_path(prm)
 
     dead_channels.get_dead_channel_ids(prm)  # read dead_channels.txt
     file_utility.create_folder_structure(prm)

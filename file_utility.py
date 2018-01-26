@@ -25,6 +25,28 @@ def find_the_file(file_path, pattern, type):
     return file_name, file_found
 
 
+def init_data_file_names(prm, beginning, end):
+    prm.set_continuous_file_name(beginning)
+    prm.set_continuous_file_name_end(end)
+
+
+def set_continuous_data_path(prm):
+    file_path = prm.get_filepath()
+    continuous_file_name_1 = '105_CH'
+    continuous_file_name_end_1 = '_0'
+    continuous_file_name_2 = '100_CH'
+    continuous_file_name_end_2 = ''
+
+    recording_path = file_path + continuous_file_name_1 + str(1) + continuous_file_name_end_1 + '.continuous'
+    if os.path.isfile(recording_path) is True:
+        init_data_file_names(prm, continuous_file_name_1, continuous_file_name_end_1)
+
+    recording_path = file_path + continuous_file_name_2 + str(1) + continuous_file_name_end_2 + '.continuous'
+    if os.path.isfile(recording_path) is True:
+        init_data_file_names(prm, continuous_file_name_2, continuous_file_name_end_2)
+
+
+
 def set_dead_channel_path(prm):
     file_path = prm.get_filepath()
     dead_ch_path = file_path + "\\dead_channels.txt"
