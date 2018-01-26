@@ -39,10 +39,9 @@ def monitor_to_sort():
             os.chmod('/home/nolanlab/to_sort/run_sorting.sh', 484)
 
             subprocess.call('/home/nolanlab/to_sort/run_sorting.sh', shell=True)
+            os.remove('/home/nolanlab/to_sort/run_sorting.sh')
 
             print('MS is done')
-
-            # call run_sorting
             # call matlab
             # if vr call Sarah's script
         else:
