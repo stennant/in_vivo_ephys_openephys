@@ -65,18 +65,10 @@ def init_params():
 
     # These are not exclusive, both can be True for the same recording - that way it'll be sorted twice
     prm.set_is_tetrode_by_tetrode(True)  # set to True if you want the spike sorting to be done tetrode by tetrode
-    prm.set_is_all_tetrodes_together(False)  # set to True if you want the spike sorting done on all tetrodes combined
+    prm.set_is_all_tetrodes_together(True)  # set to True if you want the spike sorting done on all tetrodes combined
 
 
 def process_a_dir(dir_name):
-    print('')
-    print('')
-    print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
-          '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
-    print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
-          '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
-    print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
-          '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
     print('')
     print('All folders in {} will be processed.'.format(dir_name))
     if prm.get_is_windows():

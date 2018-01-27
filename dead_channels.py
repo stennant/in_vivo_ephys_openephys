@@ -70,14 +70,12 @@ def remove_dead_channels_from_geom_file_all_tetrodes(prm):
         coordinates_x.remove(temporary_value_to_replace)
         coordinates_y.remove(temporary_value_to_replace)
 
-        with open(main_path + geom_path, 'w', newline='') as csvfile:
-            for channel in range(len(coordinates_x)):
-                fieldnames = ['x_coord', 'y_coord']
-                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    with open(main_path + geom_path, 'w', newline='') as csvfile:
+        for channel in range(len(coordinates_x)):
+            fieldnames = ['x_coord', 'y_coord']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
-                writer.writerow({'x_coord': coordinates_x[channel], 'y_coord': coordinates_y[channel]})
-    else:
-        return
+            writer.writerow({'x_coord': coordinates_x[channel], 'y_coord': coordinates_y[channel]})
 
 
 def get_list_of_live_channels(prm, tetrode):
