@@ -66,28 +66,33 @@ def get_location_on_server(recording_directory):
 
 def call_spike_sorting_analysis_scripts():
     recording_to_sort = find_sorting_directory()
-    is_vr, is_open_field = get_session_type(recording_to_sort)
-    location_on_server = get_location_on_server(recording_to_sort)  # I can give this to Tizzy
+    try:
+        is_vr, is_open_field = get_session_type(recording_to_sort)
+        location_on_server = get_location_on_server(recording_to_sort)  # I can give this to Tizzy
 
-    sys.stdout = open(server_path_first_half + location_on_server + '/sorting_log.txt', 'w')
+        sys.stdout = open(server_path_first_half + location_on_server + '/sorting_log.txt', 'w')
 
-    pre_process_ephys_data.pre_process_data(recording_to_sort)
-    print('I finished pre-processing the first recording. I will call MountainSort now.')
-    os.chmod('/home/nolanlab/to_sort/run_sorting.sh', 484)
+        pre_process_ephys_data.pre_process_data(recording_to_sort)
 
-    subprocess.call('/home/nolanlab/to_sort/run_sorting.sh', shell=True)
-    os.remove('/home/nolanlab/to_sort/run_sorting.sh')
+        print('I finished pre-processing the first recording. I will call MountainSort now.')
+        os.chmod('/home/nolanlab/to_sort/run_sorting.sh', 484)
 
-    print('MS is done')
-    # call matlab. input: vr/not vr, location on server + file location on sorting computer
-    print('Post-processing in Matlab is done.')
+        subprocess.call('/home/nolanlab/to_sort/run_sorting.sh', shell=True)
+        os.remove('/home/nolanlab/to_sort/run_sorting.sh')
 
-    if is_vr:
-        print('This is a VR session, so I will run the VR related analyses now.')
-        # todo if vr, call Sarah's script
-        pass
+        print('MS is done')
+        # call matlab. input: vr/not vr, location on server + file location on sorting computer
+        print('Post-processing in Matlab is done.')
 
-    shutil.rmtree(recording_to_sort)
+        if is_vr:
+            print('This is a VR session, so I will run the VR related analyses now.')
+            # todo if vr, call Sarah's script
+            pass
+    except Exception as ex:
+        print('There is a problem with this file. '
+              'I will move on to the next one. This is what Python says happened:')
+        print(ex)
+        shutil.rmtree(recording_to_sort)
 
 
 def monitor_to_sort():
@@ -99,8 +104,8 @@ def monitor_to_sort():
 
         if to_sort is True:
             # look at checksum and only proceed if it's okay, otherwise wait
-
             call_spike_sorting_analysis_scripts()
+
         else:
             print('Nothing to sort. I will check again in 1 minute.')
             time.sleep(time_to_wait - ((time.time() - start_time) % time_to_wait))
