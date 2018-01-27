@@ -13,6 +13,7 @@ server_path_first_half = '/run/user/1001/gvfs/smb-share:server=cmvm.datastore.ed
 
 def check_folder():
     sorting_path = sorting_folder
+    to_sort = False
     for dir, sub_dirs, files in os.walk(sorting_path):
         if not files:
             to_sort = False
@@ -64,8 +65,7 @@ def get_location_on_server(recording_directory):
     return location_on_server
 
 
-def call_spike_sorting_analysis_scripts():
-    recording_to_sort = find_sorting_directory()
+def call_spike_sorting_analysis_scripts(recording_to_sort):
     try:
         is_vr, is_open_field = get_session_type(recording_to_sort)
         location_on_server = get_location_on_server(recording_to_sort)  # I can give this to Tizzy
@@ -103,8 +103,9 @@ def monitor_to_sort():
         to_sort = check_folder()
 
         if to_sort is True:
-            # look at checksum and only proceed if it's okay, otherwise wait
-            call_spike_sorting_analysis_scripts()
+            recording_to_sort = find_sorting_directory()
+            # todo: look at checksum and only proceed if it's okay, otherwise wait
+            call_spike_sorting_analysis_scripts(recording_to_sort)
 
         else:
             print('Nothing to sort. I will check again in 1 minute.')
