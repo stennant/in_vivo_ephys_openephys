@@ -80,8 +80,7 @@ def write_shell_script_to_call_matlab(file_to_sort, path_to_server, is_openfield
     batch_writer.write('#!/bin/bash\n')
     batch_writer.write('echo "-----------------------------------------------------------------------------------"\n')
     batch_writer.write('echo "This is a shell script that will call matlab."\n')
-
-    #MATLABPATH=/home/nolanlab/PostClustering
+    batch_writer.write('MATLABPATH=/home/nolanlab/PostClustering\n')
 
     if is_openfield:
         openfield = 1
@@ -90,7 +89,11 @@ def write_shell_script_to_call_matlab(file_to_sort, path_to_server, is_openfield
 
     opto = 1
 
-    batch_writer.write('matlab -r PostClusteringAuto(' + '\'' + file_to_sort + '\'' + ',' + '\'' + path_to_server + '\'' + ',' + str(openfield) + ',' + str(opto) + ')')
+    local_path = ('%c'%39) + file_to_sort + ('%c'%39)
+    server = ('%c'%39) + server_path_first_half + path_to_server + ('%c'%39)
+
+    batch_writer.write('matlab -r ' + ('%c'%39) + 'PostClusteringAuto(' + local_path + ',' + server + ',' + str(openfield) + ',' + str(opto) +')%c'%39)
+
 
     # matlab -r 'PostClusteringAuto('path1', 'path2', of, opto)';
     # matlab - r PostClusteringAuto(path,outfile,OpenField,Opto) if openfield is 1, it is of session, opto=1 means opto
@@ -108,8 +111,8 @@ def call_spike_sorting_analysis_scripts(recording_to_sort):
         print('I finished pre-processing the first recording. I will call MountainSort now.')
         os.chmod('/home/nolanlab/to_sort/run_sorting.sh', 484)
 
-        subprocess.call('/home/nolanlab/to_sort/run_sorting.sh', shell=True)
-        os.remove('/home/nolanlab/to_sort/run_sorting.sh')
+        #subprocess.call('/home/nolanlab/to_sort/run_sorting.sh', shell=True)
+        #os.remove('/home/nolanlab/to_sort/run_sorting.sh')
 
         print('MS is done')
         write_shell_script_to_call_matlab(recording_to_sort, location_on_server, is_open_field, is_vr)
