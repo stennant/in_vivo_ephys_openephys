@@ -18,16 +18,22 @@ def check_folder():
         if not files:
             to_sort = False
         else:
-            to_sort = True
             print('I found something, and I will try to sort it now.')
-            return to_sort
+            recording_to_sort = find_sorting_directory()
+            if recording_to_sort is False:
+                to_sort = False
+            else:
+                to_sort = True
+                return to_sort, recording_to_sort
     return to_sort
 
 
 def find_sorting_directory():
     for name in glob.glob(sorting_folder + '*'):
         os.path.isdir(name)
-        return name
+        if check_if_recording_was_copied(name) is True:
+            return name
+    return False
 
 
 def check_if_recording_was_copied(recording_to_sort):
@@ -103,12 +109,10 @@ def monitor_to_sort():
     time_to_wait = 60.0
     while True:
         print('I am checking whether there is something to sort.')
-        to_sort = check_folder()
+        to_sort, recording_to_sort = check_folder()
 
         if to_sort is True:
-            recording_to_sort = find_sorting_directory()
-            if check_if_recording_was_copied(recording_to_sort) is True:
-                call_spike_sorting_analysis_scripts(recording_to_sort)
+            call_spike_sorting_analysis_scripts(recording_to_sort)
 
         else:
             print('Nothing to sort. I will check again in 1 minute.')
