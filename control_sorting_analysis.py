@@ -74,6 +74,28 @@ def get_location_on_server(recording_directory):
     return location_on_server
 
 
+def write_shell_script_to_call_matlab(file_to_sort, path_to_server, is_openfield, is_vr):
+    script_path = file_to_sort + '/run_matlab.sh'
+    batch_writer = open(script_path, 'w', newline='\n')
+    batch_writer.write('#!/bin/bash\n')
+    batch_writer.write('echo "-----------------------------------------------------------------------------------"\n')
+    batch_writer.write('echo "This is a shell script that will call matlab."\n')
+
+    #MATLABPATH=/home/nolanlab/PostClustering
+
+    if is_openfield:
+        openfield = 1
+    else:
+        openfield = 0
+
+    opto = 1
+
+    batch_writer.write('matlab -r PostClusteringAuto(' + '\'' + file_to_sort + '\'' + ',' + '\'' + path_to_server + '\'' + ',' + str(openfield) + ',' + str(opto) + ')')
+
+    # matlab -r 'PostClusteringAuto('path1', 'path2', of, opto)';
+    # matlab - r PostClusteringAuto(path,outfile,OpenField,Opto) if openfield is 1, it is of session, opto=1 means opto
+
+
 def call_spike_sorting_analysis_scripts(recording_to_sort):
     try:
         is_vr, is_open_field = get_session_type(recording_to_sort)
@@ -90,7 +112,13 @@ def call_spike_sorting_analysis_scripts(recording_to_sort):
         os.remove('/home/nolanlab/to_sort/run_sorting.sh')
 
         print('MS is done')
+        write_shell_script_to_call_matlab(recording_to_sort, location_on_server, is_open_field, is_vr)
+        os.chmod(recording_to_sort + '/run_matlab.sh', 484)
+        subprocess.call(recording_to_sort + '/run_matlab.sh', shell=True)
+
         # call matlab. input: vr/not vr, location on server + file location on sorting computer
+        # matlab -r 'PostClusteringAuto(path,outfile,OpenField,Opto)
+
         print('Post-processing in Matlab is done.')
 
         if is_vr:
