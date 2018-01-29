@@ -32,7 +32,7 @@ def convert_continuous_to_mda(prm):
         number_of_live_ch_in_tetrode = 0
         if os.path.isfile(spike_data_path + 't' + str(tetrode + 1) + raw_mda_file_path) is False:
             channel_data_all = []
-            if len(live_channels) >= 3:
+            if len(live_channels) >= 2:
                 for channel in range(4):
                     if (channel + 1) in live_channels:
                         number_of_live_ch_in_tetrode += 1
@@ -46,7 +46,7 @@ def convert_continuous_to_mda(prm):
                     channels_tetrode[ch, :] = channel_data_all[ch]
                 mdaio.writemda16i(channels_tetrode, spike_data_path + 't' + str(tetrode + 1) + raw_mda_file_path)
             else:
-                print('The number of live channels is fewer than 3 in this tetrode so I will not sort it.')
+                print('The number of live channels is fewer than 2 in this tetrode so I will not sort it.')
 
         else:
             print('This tetrode is already converted to mda, I will move on and check the next one. ' + spike_data_path + 't' + str(tetrode + 1) + '\\data\\raw.mda')
