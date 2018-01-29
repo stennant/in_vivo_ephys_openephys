@@ -30,8 +30,11 @@ def find_sorting_directory():
         return name
 
 
-def checksum():
-    pass
+def check_if_recording_was_copied(recording_to_sort):
+    if os.path.isfile(recording_to_sort + '/copied.txt') is True:
+        return True
+    else:
+        return False
 
 
 # return whether it is vr or openfield
@@ -104,8 +107,8 @@ def monitor_to_sort():
 
         if to_sort is True:
             recording_to_sort = find_sorting_directory()
-            # todo: look at checksum and only proceed if it's okay, otherwise wait
-            call_spike_sorting_analysis_scripts(recording_to_sort)
+            if check_if_recording_was_copied(recording_to_sort) is True:
+                call_spike_sorting_analysis_scripts(recording_to_sort)
 
         else:
             print('Nothing to sort. I will check again in 1 minute.')

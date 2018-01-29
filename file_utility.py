@@ -13,7 +13,7 @@ def find_the_file(file_path, pattern, type):
         pass
 
     if file_counter > 1:
-        print('There are more than one ' + type + ' files in this folder. This is may not be okay.')
+        print('There are more than one ' + type + ' files in this folder. This may not be okay.')
 
     if name is not None:
         file_name = name.rsplit('\\', 1)[1]
