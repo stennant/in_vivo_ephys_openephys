@@ -9,6 +9,8 @@ import pre_process_ephys_data
 
 sorting_folder = '/home/nolanlab/to_sort/recordings/'
 server_path_first_half = '/run/user/1001/gvfs/smb-share:server=cmvm.datastore.ed.ac.uk,share=cmvm/sbms/groups/mnolan_NolanLab/ActiveProjects/'
+server_path_fist_half_matlab = 'smb://cmvm.datastore.ed.ac.uk/cmvm/sbms/groups/mnolan_NolanLab/ActiveProjects/'
+matlab_params_file_path = '/home/nolanlab/PostClustering/'
 
 
 def check_folder():
@@ -74,29 +76,29 @@ def get_location_on_server(recording_directory):
     return location_on_server
 
 
-def write_shell_script_to_call_matlab(file_to_sort, path_to_server, is_openfield, is_vr):
+def write_param_file_for_matlab(file_to_sort, path_to_server, is_openfield, is_vr):
+    if is_openfield:
+        openfield = 1
+    else:
+        openfield = 0
+    opto = 1
+    params_for_matlab_file = open(matlab_params_file_path + "PostClusteringParams.txt", "w")
+    params_for_matlab_file.write(file_to_sort + ',\n')
+    params_for_matlab_file.write(server_path_fist_half_matlab + path_to_server + ',\n')
+    params_for_matlab_file.write(str(openfield) + ',\n')
+    params_for_matlab_file.write(str(opto))
+    params_for_matlab_file.close()
+
+
+def write_shell_script_to_call_matlab(file_to_sort):
     script_path = file_to_sort + '/run_matlab.sh'
     batch_writer = open(script_path, 'w', newline='\n')
     batch_writer.write('#!/bin/bash\n')
     batch_writer.write('echo "-----------------------------------------------------------------------------------"\n')
     batch_writer.write('echo "This is a shell script that will call matlab."\n')
-    batch_writer.write('MATLABPATH=/home/nolanlab/PostClustering\n')
+    batch_writer.write('export MATLABPATH=/home/nolanlab/PostClustering\n')
 
-    if is_openfield:
-        openfield = 1
-    else:
-        openfield = 0
-
-    opto = 1
-
-    local_path = ('%c'%39) + file_to_sort + ('%c'%39)
-    server = ('%c'%39) + server_path_first_half + path_to_server + ('%c'%39)
-
-    batch_writer.write('matlab -r ' + ('%c'%39) + 'PostClusteringAuto(' + local_path + ',' + server + ',' + str(openfield) + ',' + str(opto) +')%c'%39)
-
-
-    # matlab -r 'PostClusteringAuto('path1', 'path2', of, opto)';
-    # matlab - r PostClusteringAuto(path,outfile,OpenField,Opto) if openfield is 1, it is of session, opto=1 means opto
+    batch_writer.write('matlab -r PostClusteringAuto')
 
 
 def call_spike_sorting_analysis_scripts(recording_to_sort):
@@ -115,7 +117,8 @@ def call_spike_sorting_analysis_scripts(recording_to_sort):
         #os.remove('/home/nolanlab/to_sort/run_sorting.sh')
 
         print('MS is done')
-        write_shell_script_to_call_matlab(recording_to_sort, location_on_server, is_open_field, is_vr)
+        write_param_file_for_matlab(recording_to_sort, location_on_server, is_open_field, is_vr)
+        write_shell_script_to_call_matlab(recording_to_sort)
         os.chmod(recording_to_sort + '/run_matlab.sh', 484)
         subprocess.call(recording_to_sort + '/run_matlab.sh', shell=True)
 
