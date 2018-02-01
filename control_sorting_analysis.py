@@ -9,7 +9,7 @@ import pre_process_ephys_data
 
 sorting_folder = '/home/nolanlab/to_sort/recordings/'
 server_path_first_half = '/run/user/1001/gvfs/smb-share:server=cmvm.datastore.ed.ac.uk,share=cmvm/sbms/groups/mnolan_NolanLab/ActiveProjects/'
-server_path_fist_half_matlab = 'smb://cmvm.datastore.ed.ac.uk/cmvm/sbms/groups/mnolan_NolanLab/ActiveProjects/'
+# server_path_fist_half_matlab = 'smb://cmvm.datastore.ed.ac.uk/cmvm/sbms/groups/mnolan_NolanLab/ActiveProjects/'
 matlab_params_file_path = '/home/nolanlab/PostClustering/'
 
 
@@ -84,7 +84,7 @@ def write_param_file_for_matlab(file_to_sort, path_to_server, is_openfield, is_v
     opto = 1
     params_for_matlab_file = open(matlab_params_file_path + "PostClusteringParams.txt", "w")
     params_for_matlab_file.write(file_to_sort + ',\n')
-    params_for_matlab_file.write(server_path_fist_half_matlab + path_to_server + ',\n')
+    params_for_matlab_file.write(server_path_first_half + path_to_server + ',\n')
     params_for_matlab_file.write(str(openfield) + ',\n')
     params_for_matlab_file.write(str(opto))
     params_for_matlab_file.close()
@@ -113,8 +113,8 @@ def call_spike_sorting_analysis_scripts(recording_to_sort):
         print('I finished pre-processing the first recording. I will call MountainSort now.')
         os.chmod('/home/nolanlab/to_sort/run_sorting.sh', 484)
 
-        #subprocess.call('/home/nolanlab/to_sort/run_sorting.sh', shell=True)
-        #os.remove('/home/nolanlab/to_sort/run_sorting.sh')
+        subprocess.call('/home/nolanlab/to_sort/run_sorting.sh', shell=True)
+        os.remove('/home/nolanlab/to_sort/run_sorting.sh')
 
         print('MS is done')
         write_param_file_for_matlab(recording_to_sort, location_on_server, is_open_field, is_vr)
