@@ -126,6 +126,7 @@ def call_spike_sorting_analysis_scripts(recording_to_sort):
         # matlab -r 'PostClusteringAuto(path,outfile,OpenField,Opto)
 
         print('Post-processing in Matlab is done.')
+        shutil.rmtree(recording_to_sort)
 
         if is_vr:
             print('This is a VR session, so I will run the VR related analyses now.')
