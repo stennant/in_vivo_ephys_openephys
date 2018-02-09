@@ -1,3 +1,4 @@
+import gc
 import glob
 import os
 import shutil
@@ -18,16 +19,15 @@ def check_folder():
     to_sort = False
     for dir, sub_dirs, files in os.walk(sorting_path):
         if not files:
-            to_sort = False
+            print('I am looking here: ', dir, sub_dirs)
+
         else:
             print('I found something, and I will try to sort it now.')
             recording_to_sort = find_sorting_directory()
             if recording_to_sort is False:
-                to_sort = False
+                return recording_to_sort
             else:
-                to_sort = True
-                return to_sort, recording_to_sort
-    return to_sort
+                return recording_to_sort
 
 
 def find_sorting_directory():
@@ -35,6 +35,8 @@ def find_sorting_directory():
         os.path.isdir(name)
         if check_if_recording_was_copied(name) is True:
             return name
+        else:
+            print('This recording was not copied completely, I cannot find copied.txt')
     return False
 
 
@@ -119,6 +121,7 @@ def call_spike_sorting_analysis_scripts(recording_to_sort):
         print('MS is done')
         write_param_file_for_matlab(recording_to_sort, location_on_server, is_open_field, is_vr)
         write_shell_script_to_call_matlab(recording_to_sort)
+        gc.collect()
         os.chmod(recording_to_sort + '/run_matlab.sh', 484)
         subprocess.call(recording_to_sort + '/run_matlab.sh', shell=True)
 
@@ -144,9 +147,9 @@ def monitor_to_sort():
     time_to_wait = 60.0
     while True:
         print('I am checking whether there is something to sort.')
-        to_sort, recording_to_sort = check_folder()
+        recording_to_sort = check_folder()
 
-        if to_sort is True:
+        if recording_to_sort is not False:
             call_spike_sorting_analysis_scripts(recording_to_sort)
 
         else:
