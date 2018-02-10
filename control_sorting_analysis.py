@@ -8,6 +8,7 @@ import time
 
 import pre_process_ephys_data
 
+mountainsort_tmp_folder = '/tmp'
 sorting_folder = '/home/nolanlab/to_sort/recordings/'
 server_path_first_half = '/run/user/1001/gvfs/smb-share:server=cmvm.datastore.ed.ac.uk,share=cmvm/sbms/groups/mnolan_NolanLab/ActiveProjects/'
 # server_path_fist_half_matlab = 'smb://cmvm.datastore.ed.ac.uk/cmvm/sbms/groups/mnolan_NolanLab/ActiveProjects/'
@@ -132,6 +133,7 @@ def call_spike_sorting_analysis_scripts(recording_to_sort):
 
         print('Post-processing in Matlab is done.')
         shutil.rmtree(recording_to_sort)
+        shutil.rmtree(mountainsort_tmp_folder)
 
         if is_vr:
             print('This is a VR session, so I will run the VR related analyses now.')
