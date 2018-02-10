@@ -18,7 +18,7 @@ def check_folder():
     sorting_path = sorting_folder
     recording_to_sort = False
     for dir, sub_dirs, files in os.walk(sorting_path):
-        if not sub_dirs:
+        if not sub_dirs and not files:
             return recording_to_sort
         if not files:
             print('I am looking here: ', dir, sub_dirs)
