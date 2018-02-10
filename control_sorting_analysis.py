@@ -16,8 +16,10 @@ matlab_params_file_path = '/home/nolanlab/PostClustering/'
 
 def check_folder():
     sorting_path = sorting_folder
-    to_sort = False
+    recording_to_sort = False
     for dir, sub_dirs, files in os.walk(sorting_path):
+        if not sub_dirs:
+            return recording_to_sort
         if not files:
             print('I am looking here: ', dir, sub_dirs)
 
