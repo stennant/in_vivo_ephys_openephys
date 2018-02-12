@@ -1,0 +1,4 @@
+/home/nolanlab/to_sort/recordings/Rat2c_2017-06-16_14-15-51,
+smb://cmvm.datastore.ed.ac.uk/cmvm/sbms/groups/mnolan_NolanLab/ActiveProjects/Klara/open_field_setup/rat_test/recordings/Rat2c_2017-06-16_14-15-51,
+1,
+0
