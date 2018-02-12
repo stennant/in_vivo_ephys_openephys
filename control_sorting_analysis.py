@@ -101,7 +101,7 @@ def write_shell_script_to_call_matlab(file_to_sort):
     batch_writer.write('#!/bin/bash\n')
     batch_writer.write('echo "-----------------------------------------------------------------------------------"\n')
     batch_writer.write('echo "This is a shell script that will call matlab."\n')
-    batch_writer.write('export MATLABPATH=/home/nolanlab/PostClustering\n')
+    batch_writer.write('export MATLABPATH=/home/nolanlab/PycharmProjects/in_vivo_ephys_openephys/PostClustering/\n')
 
     batch_writer.write('matlab -r PostClusteringAuto')
 
